@@ -6,7 +6,6 @@ supported FFN layers, CNN layers, and dictionary netowrks (for when input space 
 also supports 'split' - allows for splitting into multiple heads (i.e. policy, value)
     returns a tuple of tensors when passed into CustomNN
 """
-import numpy as np
 import torch
 from torch import nn
 import ast
@@ -62,7 +61,7 @@ def layer_from_config_dict(dic, input_shape=None, only_shape=False):
     easy_layers = {
         'identity': nn.Identity,
         'relu': nn.ReLU,
-        'sigmoid':nn.Sigmoid,
+        'sigmoid': nn.Sigmoid,
         'leakyrelu': nn.LeakyReLU,
         'tanh': nn.Tanh,
         'softmax': nn.Softmax,
@@ -116,10 +115,12 @@ def layer_from_config_dict(dic, input_shape=None, only_shape=False):
         if input_shape is not None:
             # convert to batched first to make this less annoying (+1s everywhere)
             input_shape = [-1] + list(input_shape)
-            shape = (*(input_shape[:start_dim]),
-                     np.prod(input_shape[start_dim:end_dim])*input_shape[end_dim],
-                     *((input_shape[end_dim:])[1:]),  # do this to avoid issues with end_dim=-1
-                     )
+            # shenanagins to avoid issues with end_dim=-1
+            middle_shape = input_shape[end_dim]
+            for dim in input_shape[start_dim:end_dim]:
+                middle_shape = middle_shape*dim
+            # input_shape[end_dim+1:] also fails for end_dim=-1
+            shape = input_shape[:start_dim] + [middle_shape] + (input_shape[end_dim:])[1:]
             # remove the batched shape
             shape = shape[1:]
         else:
@@ -442,7 +443,7 @@ if __name__ == '__main__':
              },
         input_shape=(128, 400, 400),
     ))
-    network_dir = os.path.dirname(__file__)
+    network_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     f = open(os.path.join(network_dir, 'net_configs', 'simple_cnn.txt'), 'r')
     simple_cnn = ast.literal_eval(f.read())
     f.close()
@@ -493,4 +494,3 @@ if __name__ == '__main__':
     output = net(torch.zeros((4, 10)))
     print(output.shape)
     print(net.output_shape)
-

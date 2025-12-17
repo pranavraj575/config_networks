@@ -1,0 +1,6 @@
+[project]
+name = "config_networks"
+dynamic = ["version"]
+dependencies = [
+    "torch",
+]
