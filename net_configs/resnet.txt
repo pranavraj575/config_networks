@@ -1,0 +1,48 @@
+{
+    'input_shape': (10,),
+    'layers':
+        [
+            {
+             'type':'linear',
+             'out_features':8,
+             'bias':True,
+            },
+            {'type':'relu'},
+            {
+             'type':'repeat',
+             'times':3,
+             'block':
+                [
+                  {
+                   'type':'split',
+                   'combination':'sum',
+                   'branches':
+                    [
+                        None, # having None as a branch results in an identity, equivalent to putting []
+                        [
+                            {
+                             'type':'linear',
+                             'out_features':8,
+                             'bias':False,
+                            },
+                            {'type':'batchnorm1d'},
+                            {'type':'relu'},
+                            {
+                             'type':'linear',
+                             'out_features':8,
+                             'bias':False,
+                            },
+                            {'type':'batchnorm1d'},
+                        ]
+                    ],
+                  },
+                  {'type':'relu'},
+                ],
+            },
+            { # this layer is not explicitly handled, so it will be pulled from torch.nn
+                'type':'LogSoftmax',
+                'dim':-1,
+                'output_shape':(8,), # because we do not explictly compute the output shape of this layer, we must specify it herer
+            },
+        ],
+}
