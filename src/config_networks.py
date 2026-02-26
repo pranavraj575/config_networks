@@ -34,7 +34,7 @@ def layer_from_config_dict(dic, input_shape, only_shape=False):
             'type': type of layer (REQUIRED)
             'other parameters': other values
         }
-        examples:
+            i.e.
             {
              'type':'CNN',
              'channels':64,
@@ -42,7 +42,6 @@ def layer_from_config_dict(dic, input_shape, only_shape=False):
              'stride':(3,3),
              'padding':(0,0),
             }
-
             {
              'type':'ReLU',
             }
@@ -211,8 +210,8 @@ class _CustomNNSplit(nn.Module):
         self.heads = nn.ModuleList(heads)
         self.output_shape = tuple(output_shapes)
 
-    def forward(self, observations):
-        return tuple(head(observations) for head in self.heads)
+    def forward(self, X):
+        return tuple(head(X) for head in self.heads)
 
 
 class _CustomNNParallel(nn.Module):
@@ -319,8 +318,8 @@ class _CustomNNParallel(nn.Module):
         else:
             raise Exception("combination type unknown:", self.combine_tails)
 
-    def forward(self, observations):
-        pre_com = tuple(tail(obs) for tail, obs in zip(self.tails, observations))
+    def forward(self, X):
+        pre_com = tuple(tail(X_i) for tail, X_i in zip(self.tails, X))
         if self.combine_tails == "tuple":
             if "extract_sub_tuples" in self.extra_kwargs:
                 out = []
@@ -387,7 +386,6 @@ class CustomNN(nn.Module):
     ):
         """
         Args:
-            observation_space:
             structure: dict specifies network structure
                 can also put in None, then enter config file
                 (input_shape -> unbatched original input shape
@@ -451,5 +449,5 @@ class CustomNN(nn.Module):
             self.network = nn.Sequential(*layers)
         self.output_shape = shape
 
-    def forward(self, observations):
-        return self.network(observations)
+    def forward(self, X):
+        return self.network(X)
