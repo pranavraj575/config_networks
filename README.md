@@ -10,6 +10,24 @@ The required keys are:
 * `input_shape`: the UNBATCHED input shape of the network
 * `layers`: list of network layers, each layer is a dictionary with layer specific keys
 
+## setup
+
+Tested with Python &ge; 3.7
+
+Clone repository, install
+
+```shell
+git clone https://github.com/pranavraj575/config_networks
+cd config_networks
+pip install -e .
+```
+
+Optionally, install with dev tools:
+
+```shell
+pip install -e .[dev]
+```
+
 ## layer dictionaries
 
 All layer dictionaries are REQUIRED to contain `type`: name of layer type.
@@ -27,13 +45,12 @@ This is useful for different heads (i.e. policy, value network), or for resnets 
 map.
 `repeat` makes k copies of a block.
 
-### `identity`, `sigmoid`, `relu`, `tanh`, `batchnorm1d`, `batchnorm2d`, `batchnorm3d`
+### `identity`, `sigmoid`, `relu`, `tanh`
 
 [Identity](https://docs.pytorch.org/docs/stable/generated/torch.nn.Identity.html), 
 [Sigmoid](https://docs.pytorch.org/docs/stable/generated/torch.nn.Sigmoid.html),
 [ReLU](https://docs.pytorch.org/docs/stable/generated/torch.nn.ReLU.html), 
-[Tanh](https://docs.pytorch.org/docs/stable/generated/torch.nn.Tanh.html),
-[BatchNorm{_n_}d](https://docs.pytorch.org/docs/stable/generated/torch.nn.BatchNorm2d.html)
+[Tanh](https://docs.pytorch.org/docs/stable/generated/torch.nn.Tanh.html)
 torch layers respectively.
 
 These layers require no additional dictionary keys, and do not change the network shape.

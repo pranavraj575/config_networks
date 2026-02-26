@@ -1,6 +1,70 @@
 [project]
 name = "config_networks"
+authors = [
+    { name = "Pranav", email = "prajbhan@cs.cmu.edu" },
+]
 dynamic = ["version"]
+description = "pytorch networks built with config files"
+readme = "README.md"
 dependencies = [
     "torch",
+    "numpy"
+]
+
+[project.optional-dependencies]
+dev = [
+    "ruff",
+    "pyright",
+    "pytest",
+]
+
+[project.urls]
+Homepage = "https://github.com/pranavraj575/config_networks"
+
+
+
+[tool.ruff]
+fix = true
+indent-width = 4
+
+[tool.ruff.lint]
+ignore = [
+    "E741",
+]
+extend-select = [
+    "I",
+]
+[tool.ruff.lint.pycodestyle]
+max-line-length = 200
+
+[tool.pyright]
+useLibraryCodeForTypes = false
+reportPrivateImportUsage = false
+reportIncompatibleMethodOverride = false
+# typeCheckingMode = "strict"
+# reportUnknownVariableType = false
+# reportUnknownParameterType = false
+# reportUnknownMemberType = false
+# reportUnknownArgumentType = false
+# reportMissingParameterType = false
+# reportUnusedVariable = false
+# reportMissingTypeArgument = false
+# reportMissingTypeStubs = false
+# reportUnknownLambdaType = false
+# reportAttributeAccessIssue = false
+# reportArgumentType = false
+
+[tool.pytest.ini_options]
+#minversion = "9.0"
+addopts = [
+    "--verbose",
+    "--pdb",
+    "--capture=no",
+]
+testpaths = [
+    "test",
+]
+filterwarnings = [
+    "error::RuntimeWarning",
+    "error::UserWarning",
 ]

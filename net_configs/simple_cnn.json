@@ -1,0 +1,58 @@
+{
+  "input_shape": [
+    8,
+    240,
+    320
+  ],
+  "layers": [
+    {
+      "type": "maxpool",
+      "kernel_size": [
+        2,
+        2
+      ],
+      "stride": [
+        2,
+        2
+      ]
+    },
+    {
+      "type": "CNN",
+      "out_channels": 16,
+      "kernel_size": [
+        5,
+        5
+      ],
+      "stride": [
+        3,
+        3
+      ],
+      "padding": [
+        0,
+        0
+      ]
+    },
+    {
+      "type": "ReLU"
+    },
+    {
+      "type": "maxpool",
+      "kernel_size": [
+        2,
+        2
+      ],
+      "stride": [
+        2,
+        2
+      ]
+    },
+    {
+      "type": "flatten"
+    },
+    {
+      "type": "linear",
+      "out_features": 128,
+      "bias": false
+    }
+  ]
+}

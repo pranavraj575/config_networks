@@ -1,0 +1,53 @@
+{
+  "input_shape": [
+    10
+  ],
+  "layers": [
+    {
+      "type": "linear",
+      "out_features": 8,
+      "bias": true
+    },
+    {
+      "type": "relu"
+    },
+    {
+      "type": "repeat",
+      "times": 3,
+      "block": [
+        {
+          "type": "split",
+          "combination": "sum",
+          "branches": [
+            null,
+            [
+              {
+                "type": "linear",
+                "out_features": 8,
+                "bias": false
+              },
+              {
+                "type": "relu"
+              },
+              {
+                "type": "linear",
+                "out_features": 8,
+                "bias": false
+              }
+            ]
+          ]
+        },
+        {
+          "type": "relu"
+        }
+      ]
+    },
+    {
+      "type": "LogSoftmax",
+      "dim": -1,
+      "output_shape": [
+        8
+      ]
+    }
+  ]
+}
