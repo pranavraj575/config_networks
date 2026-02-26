@@ -36,10 +36,10 @@ def equality(a, b):
         return all(equality(ap, bp) for ap, bp in zip(a, b))
 
 
-def network_equality(net1, net2):
+def network_equalities(net1, net2):
     sd1 = net1.state_dict()
     sd2 = net2.state_dict()
-    return all(torch.equal(sd1[k], sd2[k]) for k in sd1)
+    return [torch.equal(sd1[k], sd2[k]) for k in sd1]
 
 
 @pytest.mark.parametrize(
@@ -86,7 +86,7 @@ def test_save_and_load(batch_size, network_file):
     output = network(input)
     output2 = network2(input)
     assert equality(output, output2)
-    assert network_equality(network, network2)
+    assert all(network_equalities(network, network2))
 
 
 @pytest.mark.parametrize(
@@ -127,4 +127,5 @@ def test_train(batch_size, network_file):
     output = network(input)
     output2 = network2(input)
     assert not equality(output, output2)
-    assert not network_equality(network, network2)
+    # check if ALL the weights changed
+    assert not any(network_equalities(network, network2))
