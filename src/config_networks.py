@@ -7,7 +7,6 @@ also supports 'split' - allows for splitting into multiple heads (i.e. policy, v
     returns a tuple of tensors when passed into CustomNN
 """
 
-import ast
 import inspect
 
 import torch
@@ -25,7 +24,7 @@ def get_kwargs(Constructor, dic):
     return {k: dic[k] for k in keywords if k in dic}
 
 
-def layer_from_config_dict(dic, input_shape=None, only_shape=False):
+def layer_from_config_dict(dic, input_shape, only_shape=False):
     """
     returns nn layer from a layer config dict
     handles Linear, flatten, relu, tanh, cnn, maxpool, avgpool, dropout, identity
@@ -54,6 +53,7 @@ def layer_from_config_dict(dic, input_shape=None, only_shape=False):
     Returns:
         layer, output shape (tuple or none)
     """
+    assert input_shape is not None
     Typ = dic["type"]
     typ = Typ.lower()
     layer = None
@@ -94,13 +94,10 @@ def layer_from_config_dict(dic, input_shape=None, only_shape=False):
                 in_features=input_shape[-1],
                 **get_kwargs(nn.Linear, dic),
             )
-        if input_shape is not None:
-            shape = (
-                *(input_shape[:-1]),
-                out_features,
-            )
-        else:
-            shape = None
+        shape = (
+            *(input_shape[:-1]),
+            out_features,
+        )
     elif typ == "flatten":
         start_dim = dic.get("start_dim", 1)
         end_dim = dic.get("end_dim", -1)
@@ -110,21 +107,16 @@ def layer_from_config_dict(dic, input_shape=None, only_shape=False):
         if not only_shape:
             layer = nn.Flatten(**get_kwargs(nn.Flatten, dic))
         # INCLUSIVE of end dim
-        if input_shape is not None:
-            # convert to batched first to make this less annoying (+1s everywhere)
-            input_shape = [-1] + list(input_shape)
-            # shenanagins to avoid issues with end_dim=-1
-            middle_shape = input_shape[end_dim]
-            for dim in input_shape[start_dim:end_dim]:
-                middle_shape = middle_shape * dim
-            # input_shape[end_dim+1:] also fails for end_dim=-1
-            shape = (
-                input_shape[:start_dim] + [middle_shape] + (input_shape[end_dim:])[1:]
-            )
-            # remove the batched shape
-            shape = shape[1:]
-        else:
-            shape = None
+        # convert to batched first to make this less annoying (+1s everywhere)
+        input_shape = [-1] + list(input_shape)
+        # shenanagins to avoid issues with end_dim=-1
+        middle_shape = input_shape[end_dim]
+        for dim in input_shape[start_dim:end_dim]:
+            middle_shape = middle_shape * dim
+        # input_shape[end_dim+1:] also fails for end_dim=-1
+        shape = input_shape[:start_dim] + [middle_shape] + (input_shape[end_dim:])[1:]
+        # remove the batched shape
+        shape = shape[1:]
     elif typ == "embedding":
         assert "num_embeddings" in dic and "embedding_dim" in dic, (
             "REQUIRED arguments num_embeddings and embedding_dim"
@@ -137,7 +129,6 @@ def layer_from_config_dict(dic, input_shape=None, only_shape=False):
     elif typ in cnn_layers:
         dic = dic.copy()
         Layer, requires_out_channels = cnn_layers[typ]
-        assert input_shape is not None, "input_shape required for cnn layers"
         (in_channels, H, W) = input_shape
         kernel_size = dic["kernel_size"]
         if type(kernel_size) is int:
@@ -181,8 +172,7 @@ def layer_from_config_dict(dic, input_shape=None, only_shape=False):
         shape = dic["output_shape"]
     else:
         raise Exception("type unknown:", typ)
-    if shape is not None:
-        shape = tuple(shape)
+    shape = tuple(shape)
     return layer, shape
 
 
@@ -463,59 +453,3 @@ class CustomNN(nn.Module):
 
     def forward(self, observations):
         return self.network(observations)
-
-
-if __name__ == "__main__":
-    import os
-
-    network_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    f = open(os.path.join(network_dir, "net_configs", "simple_cnn.txt"), "r")
-    simple_cnn = ast.literal_eval(f.read())
-    f.close()
-    net = CustomNN(structure=simple_cnn)
-
-    print()
-    print(net)
-    print(net(torch.rand((24, 8, 240, 320))).shape)
-    print(net.output_shape)
-
-    print("params")
-    for p in net.parameters():
-        print(p.shape)
-
-    print("TESTING SPLIT NETWORK")
-    f = open(os.path.join(network_dir, "net_configs", "split_cnn.txt"), "r")
-    split_cnn = ast.literal_eval(f.read())
-    f.close()
-    net = CustomNN(structure=split_cnn)
-
-    print()
-    print(net)
-    print("OUTPUT SHAPES:")
-    print(tuple(output.shape for output in net(torch.rand((24, 8, 240, 320)))))
-    print(net.output_shape)
-
-    print("TESTING DOUBLE SPLIT NETWORK")
-    f = open(os.path.join(network_dir, "net_configs", "double_split_cnn.txt"), "r")
-    double_split_cnn = ast.literal_eval(f.read())
-    f.close()
-    net = CustomNN(structure=double_split_cnn)
-
-    print()
-    print(net)
-    print("OUTPUT SHAPES:")
-    output = net(torch.rand((24, 8, 240, 320)))
-    print(((output[0][0].shape, output[0][1].shape), output[1].shape))
-
-    print("TESTING RESNET")
-    f = open(os.path.join(network_dir, "net_configs", "resnet.txt"), "r")
-    resnet = ast.literal_eval(f.read())
-    f.close()
-    net = CustomNN(structure=resnet)
-
-    print()
-    print(net)
-    print("OUTPUT SHAPES:")
-    output = net(torch.zeros((4, 10)))
-    print(output.shape)
-    print(net.output_shape)

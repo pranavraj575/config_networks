@@ -27,6 +27,12 @@ Optionally, install with dev tools:
 ```shell
 pip install -e .[dev]
 ```
+If installed with dev, can test installation, and reformat before pushing:
+
+```shell
+python -m pytest
+ruff check; ruff format; pyright
+```
 
 ## layer dictionaries
 

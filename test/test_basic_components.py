@@ -60,8 +60,9 @@ def test_cnn(
         },
         input_shape=img_shape,
     )
-    input = torch.rand([batch_size] + list(img_shape))
+    assert cnn_layer is not None
 
+    input = torch.rand([batch_size] + list(img_shape))
     output = cnn_layer(input)
     assert tuple(output.shape) == tuple([batch_size] + list(output_shape))
 
@@ -83,18 +84,16 @@ def test_cnn(
     shapes,
 )
 def test_easy(type_, shape):
-    input = torch.normal(0, 1, size=shape)
-    extra_args = dict()
+    dic = {"type": type_}
     if type_ == "softmax":
-        extra_args = {"dim": -1}
+        dic["dim"] = -1
     layer, output_shape = layer_from_config_dict(
-        dic={
-            "type": type_,
-        }
-        | extra_args,
+        dic=dic,
         input_shape=shape,
     )
+    assert layer is not None
 
+    input = torch.normal(0, 1, size=shape)
     output = layer(input)
     assert tuple(output.shape) == tuple(output_shape)
     if type_ == "relu":
@@ -112,12 +111,13 @@ def test_easy(type_, shape):
     output_features,
 )
 def test_linear(shape, out_features):
-    input = torch.normal(0, 1, size=shape)
     layer, output_shape = layer_from_config_dict(
         dic={"type": "linear", "out_features": out_features},
         input_shape=shape,
     )
+    assert layer is not None
 
+    input = torch.normal(0, 1, size=shape)
     output = layer(input)
     assert tuple(output.shape) == tuple(output_shape)
 
@@ -135,6 +135,8 @@ def test_flatten(shape, batch_size):
         dic={"type": "flatten"},
         input_shape=shape,
     )
+    assert layer is not None
+
     input = torch.normal(0, 1, size=[batch_size] + list(shape))
     output = layer(input)
     assert tuple(output.shape) == tuple([batch_size] + list(output_shape))
