@@ -395,8 +395,8 @@ class CustomNN(nn.Module):
 
         """
         super().__init__()
-        assert "layers" in structure
-        assert "input_shape" in structure
+        assert "layers" in structure, "config dict must contain key 'layers'"
+        assert "input_shape" in structure, "config dict must contain key 'input_shape'"
         shape = structure["input_shape"]
         layers = []
         for i, dic in enumerate(structure["layers"]):
