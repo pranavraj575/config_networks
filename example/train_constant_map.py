@@ -6,9 +6,7 @@ import torch
 from config_networks import CustomNN
 
 if __name__ == "__main__":
-    fn = os.path.join(
-        os.path.dirname(os.path.dirname(__file__)), "net_configs", "simple_cnn.json"
-    )
+    fn = os.path.join(os.path.dirname(os.path.dirname(__file__)), "net_configs", "simple_cnn.json")
     f = open(fn, "r")
     dic = json.load(f)
     f.close()

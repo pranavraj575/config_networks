@@ -47,9 +47,7 @@ strides = [1, 4, [2, 3]]
     "padding",
     paddings,
 )
-def test_cnn(
-    type_, batch_size, img_shape, kernel_size, stride, padding, output_channels
-):
+def test_cnn(type_, batch_size, img_shape, kernel_size, stride, padding, output_channels):
     cnn_layer, output_shape = layer_from_config_dict(
         dic={
             "type": type_,

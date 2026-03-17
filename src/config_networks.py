@@ -117,9 +117,7 @@ def layer_from_config_dict(dic, input_shape, only_shape=False):
         # remove the batched shape
         shape = shape[1:]
     elif typ == "embedding":
-        assert "num_embeddings" in dic and "embedding_dim" in dic, (
-            "REQUIRED arguments num_embeddings and embedding_dim"
-        )
+        assert "num_embeddings" in dic and "embedding_dim" in dic, "REQUIRED arguments num_embeddings and embedding_dim"
         if not only_shape:
             layer = nn.Embedding(**get_kwargs(nn.Embedding, dic))
         shape = (dic["embedding_dim"],)
@@ -152,9 +150,7 @@ def layer_from_config_dict(dic, input_shape, only_shape=False):
             (W + 2 * padding[1] - kernel_size[1]) // stride[1] + 1,
         )
         if requires_out_channels:
-            assert "out_channels" in dic, (
-                "REQUIRED argument out_channels in " + typ + " layer"
-            )
+            assert "out_channels" in dic, "REQUIRED argument out_channels in " + typ + " layer"
 
             out_channels = dic["out_channels"]
         else:
@@ -260,16 +256,10 @@ class _CustomNNParallel(nn.Module):
         self.extra_kwargs = kwargs
 
         if "combined_idxs" in self.extra_kwargs:
-            self.extra_kwargs["uncombined_idxs"] = [
-                i
-                for i in range(len(out_shapes))
-                if i not in self.extra_kwargs["combined_idxs"]
-            ]
+            self.extra_kwargs["uncombined_idxs"] = [i for i in range(len(out_shapes)) if i not in self.extra_kwargs["combined_idxs"]]
         if self.combine_tails == "tuple":
             if "extract_sub_tuples" in self.extra_kwargs:
-                self.extra_kwargs["extract_sub_tuples"] = set(
-                    self.extra_kwargs["extract_sub_tuples"]
-                )
+                self.extra_kwargs["extract_sub_tuples"] = set(self.extra_kwargs["extract_sub_tuples"])
                 self.output_shape = []
                 for i, sh in enumerate(out_shapes):
                     if i in self.extra_kwargs["extract_sub_tuples"]:
@@ -280,9 +270,7 @@ class _CustomNNParallel(nn.Module):
             else:
                 self.output_shape = out_shapes
         elif self.combine_tails == "sum":
-            combined_idxs = self.extra_kwargs.get(
-                "combined_idxs", list(range(len(out_shapes)))
-            )
+            combined_idxs = self.extra_kwargs.get("combined_idxs", list(range(len(out_shapes))))
             comb_shape = out_shapes[combined_idxs[0]]
             if "combined_idxs" in self.extra_kwargs:
                 self.output_shape = []
@@ -296,9 +284,7 @@ class _CustomNNParallel(nn.Module):
             else:
                 self.output_shape = comb_shape
         elif self.combine_tails == "concat":
-            combined_idxs = self.extra_kwargs.get(
-                "combined_idxs", list(range(len(out_shapes)))
-            )
+            combined_idxs = self.extra_kwargs.get("combined_idxs", list(range(len(out_shapes))))
             dim = self.extra_kwargs.get("dim", -1)
             comb_shape = list(out_shapes[combined_idxs[0]])
             for comb_idx in combined_idxs[1:]:
@@ -334,16 +320,8 @@ class _CustomNNParallel(nn.Module):
                 return pre_com
         elif self.combine_tails == "sum":
             if "combined_idxs" in self.extra_kwargs:
-                combined = sum(
-                    [
-                        pre_com[comb_idx]
-                        for comb_idx in self.extra_kwargs["combined_idxs"]
-                    ]
-                )
-                uncombined = [
-                    pre_com[uncomb_idx]
-                    for uncomb_idx in self.extra_kwargs["uncombined_idxs"]
-                ]
+                combined = sum([pre_com[comb_idx] for comb_idx in self.extra_kwargs["combined_idxs"]])
+                uncombined = [pre_com[uncomb_idx] for uncomb_idx in self.extra_kwargs["uncombined_idxs"]]
                 uncombined.insert(
                     self.extra_kwargs.get("idx_of_combination", len(uncombined)),
                     combined,
@@ -354,16 +332,10 @@ class _CustomNNParallel(nn.Module):
         elif self.combine_tails == "concat":
             if "combined_idxs" in self.extra_kwargs:
                 combined = torch.concat(
-                    [
-                        pre_com[comb_idx]
-                        for comb_idx in self.extra_kwargs["combined_idxs"]
-                    ],
+                    [pre_com[comb_idx] for comb_idx in self.extra_kwargs["combined_idxs"]],
                     dim=self.extra_kwargs.get("dim", -1),
                 )
-                uncombined = [
-                    pre_com[uncomb_idx]
-                    for uncomb_idx in self.extra_kwargs["uncombined_idxs"]
-                ]
+                uncombined = [pre_com[uncomb_idx] for uncomb_idx in self.extra_kwargs["uncombined_idxs"]]
                 uncombined.insert(
                     self.extra_kwargs.get("idx_of_combination", len(uncombined)),
                     combined,
@@ -400,16 +372,11 @@ class CustomNN(nn.Module):
         for i, dic in enumerate(structure["layers"]):
             if dic["type"] == "split":
                 assert "branches" in dic
-                split_lyr = _CustomNNSplit(
-                    input_shape=shape, layer_dict_lists=dic["branches"]
-                )
+                split_lyr = _CustomNNSplit(input_shape=shape, layer_dict_lists=dic["branches"])
                 layers.append(split_lyr)
                 shape = split_lyr.output_shape
                 if "combination" in dic:
-                    if (
-                        dic["combination"] == "tuple"
-                        and "extract_sub_tuples" not in dic
-                    ):
+                    if dic["combination"] == "tuple" and "extract_sub_tuples" not in dic:
                         pass
                         # print('no need to specify combinatation==tuple')
                     else:

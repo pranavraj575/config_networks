@@ -8,9 +8,7 @@ import torch
 from src.config_networks import CustomNN
 
 batch_sizes = [1, 2, 4, 16]
-network_dir = os.path.join(
-    os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "net_configs"
-)
+network_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "net_configs")
 
 
 def generate_random_input(batch_size, input_shape):
