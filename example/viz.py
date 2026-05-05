@@ -1,4 +1,5 @@
 import argparse
+import ast
 import json
 import os
 
@@ -38,20 +39,24 @@ class INPUT_TENSOR(torch.nn.Module):
 
 p = argparse.ArgumentParser()
 p.add_argument(
-    "--config_json",
+    "--config_file",
     nargs="+",
     type=str,
-    default=[os.path.join(DIR, "net_configs", filename) for filename in os.listdir(os.path.join(DIR, "net_configs")) if filename.endswith(".json")],
-    help="config files to display",
+    default=[os.path.join(DIR, "net_configs", filename) for filename in os.listdir(os.path.join(DIR, "net_configs"))],
+    help="config files to display (can be json or plaintext)",
 )
 p.add_argument("--output_dir", type=str, default=os.path.join(DIR, "output"), help="directory to output files")
 p.add_argument("--recursion_depth", type=int, default=1000, help="depth to expand nested torch modules")
 args = p.parse_args()
 
-for filename in args.config_json:
+for filename in args.config_file:
     model_name, _ = os.path.basename(filename).split(".")
+
     with open(filename) as f:
-        structrue = json.load(f)
+        if filename.endswith(".json"):
+            structrue = json.load(f)
+        else:
+            structrue = ast.literal_eval(f.read())
     model = CustomNN(structrue)
     x = generate_random_input(1, structrue["input_shape"])
     try:

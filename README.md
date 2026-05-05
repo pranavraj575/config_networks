@@ -163,8 +163,8 @@ Splits network into branches, computed independently.
   Specifying this is equivalent to adding a `parallel` layer with no branches.
 
 This is computed recursively, so splits can be repeatedly applied (though there is probably no reason to do this).
-An example of this is in [`net_configs/split_cnn.txt`](net_configs/split_cnn.txt).
-A example of splitting multiple times is in [`net_configs/double_split_cnn.txt`](net_configs/double_split_cnn.txt).
+An example of this is in [`net_configs/split_cnn.json`](net_configs/split_cnn.json).
+A example of splitting multiple times is in [`net_configs/double_split_cnn.json`](net_configs/double_split_cnn.json).
 
 The input for each branch will be the output of the layer immediately before it.
 This is why we do not need to specify the input shape.
