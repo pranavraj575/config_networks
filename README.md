@@ -1,7 +1,6 @@
 # Network generated from config file
 
-![](https://github.com/pranavraj575/config_networks/blob/main/images/visualize_small_split_recombine_cnn.gif)
-![](https://github.com/pranavraj575/config_networks/blob/main/images/visualize_resnet.gif)
+<img src="https://github.com/pranavraj575/config_networks/blob/main/images/visualize_small_split_recombine_cnn.gif" width="40%" />&nbsp;&nbsp;&nbsp;<img src="https://github.com/pranavraj575/config_networks/blob/main/images/visualize_resnet.gif" width="40%" />
 
 For examples of config dicts, look in `net_configs`.
 To generate a network given a dictionary, use `net = CustomNN(structure=config_dict)`.
