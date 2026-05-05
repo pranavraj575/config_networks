@@ -60,8 +60,8 @@ p.add_argument(
 p.add_argument("--output_dir", type=str, default=os.path.join(DIR, "images"), help="directory to output files")
 p.add_argument("--recursion_depth", type=int, default=1000, help="depth to expand nested torch modules")
 p.add_argument("--save_gif", action='store_true', help="whether to save gif of scrolling through network (useful for networks that are really long")
-p.add_argument("--duration",type=int, default=200,help="duration (ms) of each frame in the gif")
-p.add_argument("--scroll",type=int, default=15,help="amount (pixels) to scroll for each frame in the gif")
+p.add_argument("--duration",type=int, default=250,help="duration (ms) of each frame in the gif")
+p.add_argument("--scroll",type=int, default=10,help="amount (pixels) to scroll for each frame in the gif")
 args = p.parse_args()
 
 for filename in args.config_file:
@@ -107,16 +107,20 @@ for filename in args.config_file:
             scroll_dim=1
         else:
             scroll_dim=0
-        img_files=[]
-        frame_bounds=np.array([0,img.shape[1-scroll_dim]])
-        i=0
-        while frame_bounds is not None:
+
+        def save_frame(frame_bounds,save_file):
             if scroll_dim==0:
                 temp_img=img[frame_bounds[0]:frame_bounds[1]]
             else:
                 temp_img=img[:,frame_bounds[0]:frame_bounds[1]]
+            Image.fromarray(temp_img,mode=img_obj.mode).save(save_file)
+
+        img_files=[]
+        frame_bounds=np.array([0,img.shape[1-scroll_dim]])
+        i=0
+        while frame_bounds is not None:
             fn=os.path.join(args.output_dir,f"temp_img_{i}.png")
-            Image.fromarray(temp_img,mode=img_obj.mode).save(fn)
+            save_frame(frame_bounds,save_file=fn)
             img_files.append(fn)
             if frame_bounds[1]>=img.shape[scroll_dim]:
                 frame_bounds=None
@@ -127,6 +131,13 @@ for filename in args.config_file:
             if frame_bounds[1]>img.shape[scroll_dim]:
                 frame_bounds=np.array([img.shape[scroll_dim]-img.shape[1-scroll_dim],img.shape[scroll_dim]])
             i+=1
+        i+=1
+        # linger at end
+        fn=os.path.join(args.output_dir,f"temp_img_{i}.png")
+        save_frame(np.array([img.shape[scroll_dim]-img.shape[1-scroll_dim],img.shape[scroll_dim]]),
+                   save_file=fn)
+        img_files.append(fn)
+
         create_gif(image_paths=img_files,
                    output_gif_path=output_gif,
                    duration=args.duration)
