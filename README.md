@@ -185,3 +185,15 @@ Repeats a block a certian number of times.
 * `count`: REQUIRED parameter, number of times to repeat block.
 
 `net_configs/resnet.txt` has an example of using this to make a resnet, which repeatedly computes `x'=f(x)+x`.
+
+## visualize network
+
+
+To make network visualizations, install [torchview](https://github.com/mert-kurttutan/torchview):
+
+```shell
+pip install graphviz
+sudo apt-get install graphviz
+```
+
+Example script to make visualization of a .json config file is [`viz.py`](example/viz.py)
