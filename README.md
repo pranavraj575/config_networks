@@ -143,7 +143,9 @@ Relevant keyword arguments will be passed to the torch.nn init function.
   This is necessary to calculate the input dimension of the next layer, and cannot be easily pulled from torch
   documentation.
 
-`net_configs/resnet.txt` has an example of using this to make a nn.LogSoftmax layer.
+[`net_configs/resnet.txt`](net_configs/resnet.txt) has an example of using this to make a nn.LogSoftmax layer.
+
+![](https://github.com/pranavraj575/config_networks/blob/main/output/visualize_resnet.png)
 </details>
 
 <details>
