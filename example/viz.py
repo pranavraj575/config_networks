@@ -57,7 +57,7 @@ p.add_argument(
     default=[os.path.join(DIR, "net_configs", filename) for filename in os.listdir(os.path.join(DIR, "net_configs"))],
     help="config files to display (can be json or plaintext)",
 )
-p.add_argument("--output_dir", type=str, default=os.path.join(DIR, "output"), help="directory to output files")
+p.add_argument("--output_dir", type=str, default=os.path.join(DIR, "images"), help="directory to output files")
 p.add_argument("--recursion_depth", type=int, default=1000, help="depth to expand nested torch modules")
 p.add_argument("--save_gif", action='store_true', help="whether to save gif of scrolling through network (useful for networks that are really long")
 p.add_argument("--duration",type=int, default=100,help="duration (ms) of each frame in the gif")

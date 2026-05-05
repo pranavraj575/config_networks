@@ -145,7 +145,7 @@ Relevant keyword arguments will be passed to the torch.nn init function.
 
 [`net_configs/resnet.txt`](net_configs/resnet.txt) has an example of using this to make a nn.LogSoftmax layer:
 
-![](https://github.com/pranavraj575/config_networks/blob/main/output/visualize_resnet.png)
+![](https://github.com/pranavraj575/config_networks/blob/main/images/visualize_resnet.png)
 </details>
 
 <details>
@@ -171,15 +171,15 @@ This is why we do not need to specify the input shape.
 
 Splitting once:
 
-![](https://github.com/pranavraj575/config_networks/blob/main/output/visualize_split_cnn.png)
+![](https://github.com/pranavraj575/config_networks/blob/main/images/visualize_split_cnn.png)
 
 Splitting multiple times:
 
-![](https://github.com/pranavraj575/config_networks/blob/main/output/visualize_double_split_cnn.png)
+![](https://github.com/pranavraj575/config_networks/blob/main/images/visualize_double_split_cnn.png)
 
 Splitting and recombining ([`net_configs/small_split_recombine_cnn.json`](net_configs/small_split_recombine_cnn.json)):
 
-![](https://github.com/pranavraj575/config_networks/blob/main/output/visualize_small_split_recombine_cnn.png)
+![](https://github.com/pranavraj575/config_networks/blob/main/images/visualize_small_split_recombine_cnn.png)
 
 </details>
 
@@ -213,7 +213,7 @@ Computes a tuple of k tensors independently, may merge at end of computation.
 
 [`net_configs/multimodal.txt`](net_configs/multimodal.txt) has an example of using these to take in (image, vector) input:
 
-![](https://github.com/pranavraj575/config_networks/blob/main/output/visualize_multimodal.png)
+![](https://github.com/pranavraj575/config_networks/blob/main/images/visualize_multimodal.png)
 </details>
 
 <details>
@@ -225,7 +225,7 @@ Repeats a block a certian number of times.
 
 [`net_configs/resnet.txt`](net_configs/resnet.txt) has an example of using this to make a resnet, which repeatedly computes `x'=f(x)+x`:
 
-![](https://github.com/pranavraj575/config_networks/blob/main/output/visualize_resnet.png)
+![](https://github.com/pranavraj575/config_networks/blob/main/images/visualize_resnet.png)
 
 </details>
 
