@@ -1,5 +1,7 @@
 # Network generated from config file
 
+![](https://github.com/pranavraj575/config_networks/blob/main/images/visualize_small_split_recombine_cnn.gif)
+
 For examples of config dicts, look in `net_configs`.
 To generate a network given a dictionary, use `net = CustomNN(structure=config_dict)`.
 For example, `net = CustomNN(structure=ast.literal_eval(open(<config file>).read()))`
