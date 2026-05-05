@@ -204,7 +204,10 @@ Repeats a block a certian number of times.
 * `block`: REQUIRED parameter, list of layer dictionaries to be repeatedly added.
 * `count`: REQUIRED parameter, number of times to repeat block.
 
-`net_configs/resnet.txt` has an example of using this to make a resnet, which repeatedly computes `x'=f(x)+x`.
+[`net_configs/resnet.txt`](net_configs/resnet.txt) has an example of using this to make a resnet, which repeatedly computes `x'=f(x)+x`:
+
+![](https://github.com/pranavraj575/config_networks/blob/main/output/visualize_resnet.png)
+
 </details>
 
 ## visualize network
@@ -217,4 +220,4 @@ pip install graphviz
 sudo apt-get install graphviz
 ```
 
-Example script to make visualization of a .json config file is [`viz.py`](example/viz.py)
+Example script to make visualization of a .json config file is [`example/viz.py`](example/viz.py)
