@@ -98,6 +98,7 @@ torch layers respectively.
 * `start_dim`: optional parameter with default `"start_dim": 1`, represnents first dimension for flattening
 * `end_dim`: optional parameter with default `"end_dim": -1`, represents last dimension to be flattened
 </details>
+
 <details>
 <summary><code>linear</code></summary>
 
@@ -144,6 +145,7 @@ Relevant keyword arguments will be passed to the torch.nn init function.
 
 `net_configs/resnet.txt` has an example of using this to make a nn.LogSoftmax layer.
 </details>
+
 <details>
 <summary><code>split</code></summary>
 
@@ -159,13 +161,21 @@ Splits network into branches, computed independently.
   Specifying this is equivalent to adding a `parallel` layer with no branches.
 
 This is computed recursively, so splits can be repeatedly applied (though there is probably no reason to do this).
-An example of this is in `net_configs/split_cnn.txt`.
-A example of splitting multiple times is in `net_configs/double_split_cnn.txt`.
+An example of this is in [`net_configs/split_cnn.txt`](net_configs/split_cnn.txt).
+A example of splitting multiple times is in [`net_configs/double_split_cnn.txt`](net_configs/double_split_cnn.txt).
 
 The input for each branch will be the output of the layer immediately before it.
 This is why we do not need to specify the input shape.
 
+Splitting once:
+
+![](https://github.com/pranavraj575/config_networks/blob/main/output/visualize_split_cnn.png)
+
+Splitting multiple times:
+
+![](https://github.com/pranavraj575/config_networks/blob/main/output/visualize_double_split_cnn.png)
 </details>
+
 <details>
 <summary><code>parallel</code></summary>
 
