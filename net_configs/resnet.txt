@@ -4,7 +4,7 @@
         [
             {
              'type':'linear',
-             'out_features':8,
+             'out_features':64,
              'bias':True,
             },
             {'type':'relu'},
@@ -22,13 +22,13 @@
                         [
                             {
                              'type':'linear',
-                             'out_features':8,
+                             'out_features':128,
                              'bias':False,
                             },
                             {'type':'relu'},
                             {
                              'type':'linear',
-                             'out_features':8,
+                             'out_features':64,
                              'bias':False,
                             },
                         ]
@@ -37,10 +37,15 @@
                   {'type':'relu'},
                 ],
             },
+            {
+                'type':'linear',
+                'out_features':4,
+                'bias':True,
+            },
             { # this layer is not explicitly handled, so it will be pulled from torch.nn
                 'type':'LogSoftmax',
                 'dim':-1,
-                'output_shape':(8,), # because we do not explictly compute the output shape of this layer, we must specify it herer
+                'output_shape':(4,), # because we do not explictly compute the output shape of this layer, we must specify it herer
             },
         ],
 }
