@@ -36,13 +36,13 @@
       "type": "ReLU"
     },
     {
-      "type": "flatten"
-    },
-    {
       "type": "split",
       "combination": "concat",
       "branches": [
         [
+          {
+            "type": "flatten"
+          },
           {
             "type": "linear",
             "out_features": 64,
@@ -50,17 +50,34 @@
           },
           {
             "type": "ReLU"
-          },
-          {
-            "type": "linear",
-            "out_features": 69,
-            "bias": false
           }
         ],
         [
           {
+            "type": "CNN",
+            "out_channels": 16,
+            "kernel_size": [
+              5,
+              5
+            ],
+            "stride": [
+              3,
+              3
+            ],
+            "padding": [
+              0,
+              0
+            ]
+          },
+          {
+            "type": "ReLU"
+          },
+          {
+            "type": "flatten"
+          },
+          {
             "type": "linear",
-            "out_features": 1,
+            "out_features": 5,
             "bias": false
           }
         ]
