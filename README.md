@@ -194,7 +194,9 @@ Computes a tuple of k tensors independently, may merge at end of computation.
       This can also specify `"combined_idxs"` with the same behavior as in `sum`.
       This will concatenate in the order specified by `"combined_idxs"`, or in default order if unspecified.
 
-`net_configs/ttt_dyn.txt` has an example of using these to mess with a state,action pair input.
+[`net_configs/multimodal.txt`](net_configs/multimodal.txt) has an example of using these to take in (image, vector) input:
+
+![](https://github.com/pranavraj575/config_networks/blob/main/output/visualize_multimodal.png)
 </details>
 
 <details>
