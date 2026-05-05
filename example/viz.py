@@ -60,7 +60,7 @@ p.add_argument(
 p.add_argument("--output_dir", type=str, default=os.path.join(DIR, "images"), help="directory to output files")
 p.add_argument("--recursion_depth", type=int, default=1000, help="depth to expand nested torch modules")
 p.add_argument("--save_gif", action='store_true', help="whether to save gif of scrolling through network (useful for networks that are really long")
-p.add_argument("--duration",type=int, default=250,help="duration (ms) of each frame in the gif")
+p.add_argument("--duration",type=int, default=200,help="duration (ms) of each frame in the gif")
 p.add_argument("--scroll",type=int, default=10,help="amount (pixels) to scroll for each frame in the gif")
 args = p.parse_args()
 
