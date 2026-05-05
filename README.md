@@ -51,7 +51,8 @@ This is useful for different heads (i.e. policy, value network), or for resnets 
 map.
 `repeat` makes k copies of a block.
 
-#### `identity`, `sigmoid`, `relu`, `tanh`
+<details>
+<summary><code>identity, sigmoid, relu, tanh</code></summary>
 
 [Identity](https://docs.pytorch.org/docs/stable/generated/torch.nn.Identity.html), 
 [Sigmoid](https://docs.pytorch.org/docs/stable/generated/torch.nn.Sigmoid.html),
@@ -60,18 +61,24 @@ map.
 torch layers respectively.
 
 These layers require no additional dictionary keys, and do not change the network shape.
+</details>
 
-#### `leakyrelu`
+<details>
+<summary><code>leakyrelu</code></summary>
 
 [LeakyReLU](https://docs.pytorch.org/docs/stable/generated/torch.nn.LeakyReLU.html) activation layer, has optional parameter `negative_slope` with default `"negative_slope":1e-2`.
+</details>
 
-#### `softmax`
+<details>
+<summary><code>softmax</code></summary>
 
 The [Softmax](https://docs.pytorch.org/docs/stable/generated/torch.nn.Softmax.html) torch layer.
 
 * `dim`: optional parameter with default `"dim": -1`, probability of element to be zeroed
+</details>
 
-#### `dropout`, `dropout1d`, `dropout2d`, `dropout3d`
+<details>
+<summary><code>dropout, dropout1d, dropout2d, dropout3d</code></summary>
 
 The 
 [Dropout](https://docs.pytorch.org/docs/stable/generated/torch.nn.Dropout.html),
@@ -81,15 +88,18 @@ and [Dropout3D](https://docs.pytorch.org/docs/stable/generated/torch.nn.Dropout3
 torch layers respectively.
 
 * `p`: optional parameter with default `"p": 0.5`, probability of element to be zeroed
+</details>
 
-#### `flatten`
+<details>
+<summary><code>flatten</code></summary>
 
 [Flatten](https://docs.pytorch.org/docs/stable/generated/torch.nn.modules.flatten.Flatten.html) torch layer
 
 * `start_dim`: optional parameter with default `"start_dim": 1`, represnents first dimension for flattening
 * `end_dim`: optional parameter with default `"end_dim": -1`, represents last dimension to be flattened
-
-#### `linear`
+</details>
+<details>
+<summary><code>linear</code></summary>
 
 [Linear](https://docs.pytorch.org/docs/stable/generated/torch.nn.Linear.html) torch layer
 
@@ -97,15 +107,19 @@ torch layers respectively.
 * `bias`: optional parameter with default `"bias": True`, whether to include bias
 
 Note that input_features is calculated automatically, and does not need to be specified.
+</details>
 
-#### `embedding`
+<details>
+<summary><code>embedding</code></summary>
 
 [Embedding](https://docs.pytorch.org/docs/stable/generated/torch.nn.Embedding.html) torch layer
 
 * `num_embeddings`: REQUIRED parameter, the number of unique embeddings to store
 * `embedding_dim`: REQUIRED parameter, the dimension of each embedding
+</details>
 
-#### `cnn`, `maxpool`, `avgpool`
+<details>
+<summary><code>cnn, maxpool, avgpool</code></summary>
 
 [Conv2d](https://docs.pytorch.org/docs/stable/generated/torch.nn.Conv2d.html), 
 [MaxPool2d](https://docs.pytorch.org/docs/stable/generated/torch.nn.MaxPool2d.html),
@@ -116,8 +130,10 @@ torch layers respectively
 * `kernel_size`: REQUIRED parameter, the shape of the kernel passed to each torch layer
 * `stride`: optional parameter with default `"stride": (1,1)`, stride to use
 * `padding`: optional parameter with default `"padding": (0,0)`, padding to use
+</details>
 
-#### Any module in torch.nn
+<details>
+<summary>Any module in torch.nn</summary>
 
 Also can retrieve any module in torch.nn, assuming the spelling and capitalization is correct.
 Relevant keyword arguments will be passed to the torch.nn init function.
@@ -127,8 +143,9 @@ Relevant keyword arguments will be passed to the torch.nn init function.
   documentation.
 
 `net_configs/resnet.txt` has an example of using this to make a nn.LogSoftmax layer.
-
-#### `split`
+</details>
+<details>
+<summary><code>split</code></summary>
 
 Splits network into branches, computed independently.
 
@@ -148,7 +165,9 @@ A example of splitting multiple times is in `net_configs/double_split_cnn.txt`.
 The input for each branch will be the output of the layer immediately before it.
 This is why we do not need to specify the input shape.
 
-#### `parallel`
+</details>
+<details>
+<summary><code>parallel</code></summary>
 
 Computes a tuple of k tensors independently, may merge at end of computation.
 
@@ -176,15 +195,17 @@ Computes a tuple of k tensors independently, may merge at end of computation.
       This will concatenate in the order specified by `"combined_idxs"`, or in default order if unspecified.
 
 `net_configs/ttt_dyn.txt` has an example of using these to mess with a state,action pair input.
+</details>
 
-#### `repeat`
-
+<details>
+<summary><code>repeat</code></summary>
 Repeats a block a certian number of times.
 
 * `block`: REQUIRED parameter, list of layer dictionaries to be repeatedly added.
 * `count`: REQUIRED parameter, number of times to repeat block.
 
 `net_configs/resnet.txt` has an example of using this to make a resnet, which repeatedly computes `x'=f(x)+x`.
+</details>
 
 ## visualize network
 
