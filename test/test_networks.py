@@ -148,9 +148,13 @@ def test_train(batch_size, network_file):
 def test_custom(shape, seed):
     torch.random.manual_seed(seed)
 
-    class Invert(torch.nn.Module):
+    class Scale(torch.nn.Module):
+        def __init__(self, scalar=1):
+            super().__init__()
+            self.scalar = scalar
+
         def forward(self, X):
-            return -X
+            return self.scalar * X
 
     structure = {
         "input_shape": shape,
@@ -160,7 +164,7 @@ def test_custom(shape, seed):
                 "combination": "sum",
                 "branches": [
                     None,
-                    [{"type": "custom", "module": Invert, "output_shape": shape}],
+                    [{"type": "custom", "module": Scale, "scalar": -1, "output_shape": shape}],
                 ],
             }
         ],

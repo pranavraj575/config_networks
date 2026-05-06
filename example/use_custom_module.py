@@ -6,9 +6,13 @@ import torchview
 from config_networks import CustomNN
 
 
-class Invert(torch.nn.Module):
+class Scale(torch.nn.Module):
+    def __init__(self, scalar=1):
+        super().__init__()
+        self.scalar = scalar
+
     def forward(self, X):
-        return -X
+        return self.scalar * X
 
 
 input_shape = (6, 9, 4, 20)
@@ -20,14 +24,14 @@ structure = {
             "combination": "sum",
             "branches": [
                 None,
-                [{"type": "custom", "module": Invert, "output_shape": input_shape}],
+                [{"type": "custom", "module": Scale, "output_shape": input_shape, "scalar": -1}],
             ],
         }
     ],
 }
 model = CustomNN(structure)
 
-print(model(torch.rand(input_shape)))  # should be all zeros, since this is x + (-x)
+assert torch.all(torch.eq(model(torch.rand(input_shape)), 0)), "output should be all zeros, since this is x + (-x)"
 
 DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 model_graph = torchview.draw_graph(

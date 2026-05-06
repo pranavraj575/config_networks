@@ -150,15 +150,25 @@ def test_dicts(shape, dic, batch_size):
     "shape",
     shapes,
 )
-def test_custom_layer(shape):
-    class Invert(torch.nn.Module):
+@pytest.mark.parametrize(
+    "scalar",
+    list(range(-10, 10)),
+)
+def test_custom_layer(shape, scalar):
+    class Scale(torch.nn.Module):
+        def __init__(self, scalar=1):
+            super().__init__()
+            self.scalar = scalar
+
         def forward(self, X):
-            return -X
+            return self.scalar * X
 
     layer, output_shape = layer_from_config_dict(
-        {"type": "custom", "module": Invert, "output_shape": shape},
+        {"type": "custom", "module": Scale, "scalar": scalar, "output_shape": shape},
         input_shape=shape,
     )
     assert layer is not None
-    y = layer(torch.rand(shape))
+    x = torch.rand(shape)
+    y = layer(x)
     assert tuple(y.shape) == output_shape
+    assert torch.equal(y, x * scalar)

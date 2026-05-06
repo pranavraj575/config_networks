@@ -186,7 +186,7 @@ Relevant keyword arguments will be passed to the module init function.
   This is necessary to calculate the input dimension of the next layer, and cannot be easily pulled from torch
   documentation.
 
-Example: `{"type": "custom", "module": Invert, "output_shape": [10]}`
+Example: `{"type": "custom", "module": Scale, "scalar": -1, "output_shape": [10]}`
 
 Example of this is in [`example\use_custom_module.py`](example\use_custom_module.py):
 
