@@ -237,8 +237,8 @@ Repeats a block a certian number of times.
 To make network visualizations, install [torchview](https://github.com/mert-kurttutan/torchview):
 
 ```shell
-pip install graphviz
 sudo apt-get install graphviz
+pip install torchview
 ```
 
 Example script to make visualization of a .json config file is [`example/viz.py`](example/viz.py)
