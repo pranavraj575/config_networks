@@ -269,6 +269,10 @@ Example of using this to sum all branches ([`net_configs/tuple_sum.txt`](net_con
 
 ![](https://github.com/pranavraj575/config_networks/blob/main/images/visualize_tuple_sum.png)
 ![](https://github.com/pranavraj575/config_networks/blob/main/images/visualize_tuple_sum_specific_indices.png)
+
+Example of using this to extract (then sum) multiple sub-tuples ([`net_configs/tuple_multiple_extraction.txt`](net_configs/tuple_multiple_extraction.txt)):
+
+![](https://github.com/pranavraj575/config_networks/blob/main/images/visualize_tuple_multiple_extraction.png)
 </details>
 
 <details>
