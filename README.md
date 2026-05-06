@@ -170,7 +170,7 @@ Example: `{"type": "LogSoftmax", "dim": -1, "output_shape": [4]}`
 
 Alternatively: `{"type": "torch.nn.LogSoftmax", "dim": -1, "output_shape": [4]}`
 
-[`net_configs/resnet.txt`](net_configs/resnet.txt) has an example of using this to make a nn.LogSoftmax layer:
+[`net_configs/resnet.txt`](net_configs/resnet.txt) has an example of using this to make a torch.nn.Softmax layer:
 
 ![](https://github.com/pranavraj575/config_networks/blob/main/images/visualize_resnet.png)
 </details>

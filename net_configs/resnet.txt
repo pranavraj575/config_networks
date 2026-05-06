@@ -44,10 +44,10 @@
                                    #   (if we used 'type': 'linear' we would not need to do this)
                 'output_shape':(4,), # because this is pulled from torch.nn, we must specify output shape
             },
-            { # this layer is not explicitly handled, so it will be pulled from torch.nn
-                'type':'LogSoftmax', # can alternatively be 'torch.nn.LogSoftmax'
+            { # this layer will be pulled from torch.nn
+                'type':'torch.nn.Softmax',
                 'dim':-1,
-                'output_shape':(4,), # because we do not explictly compute the output shape of this layer, we must specify it herer
+                'output_shape':(4,), # because we cannot compute the output shape of this layer, we must specify it herer
             },
         ],
 }
