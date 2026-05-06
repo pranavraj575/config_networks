@@ -75,6 +75,7 @@ for filename in args.config_file:
         else:
             structrue = ast.literal_eval(f.read())
     model = CustomNN(structrue)
+    print(f"Visualizing {model_name} with output shape {model.output_shape}")
     x = generate_random_input(1, structrue["input_shape"])
     try:
         model_graph = torchview.draw_graph(

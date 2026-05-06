@@ -205,6 +205,8 @@ Example (this sums an identity branch with a branch that computes a single linea
 
 Splitting once:
 
+Note that the `torchviz` display does not order the output tuple in any particular way. The true output shape is `((69,), (1,))`.
+
 ![](https://github.com/pranavraj575/config_networks/blob/main/images/visualize_split_cnn.png)
 
 Splitting multiple times:
@@ -258,6 +260,8 @@ Example (this flattens both inputs, then concatenates them):
 ![](https://github.com/pranavraj575/config_networks/blob/main/images/visualize_multimodal.png)
 
 Example of using this to extract (then concatenate) sub-tuples ([`net_configs/tuple_extraction.txt`](net_configs/tuple_extraction.txt)):
+
+Note that the input shape is actually `(((10,), (11,), (12,), (13,)), (8, 240, 320))`, the package  `torchviz` does not correctly display subtuples.
 
 ![](https://github.com/pranavraj575/config_networks/blob/main/images/visualize_tuple_extraction.png)
 
