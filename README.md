@@ -73,7 +73,7 @@ Example: `{"type": "ReLU"}`
 
 [LeakyReLU](https://docs.pytorch.org/docs/stable/generated/torch.nn.LeakyReLU.html) activation layer, has optional parameter `negative_slope` with default `"negative_slope":1e-2`.
 
-Example: `{"type": "LeakyReLU", "negative_slope":1e-2}`
+Example: `{"type": "LeakyReLU", "negative_slope": 1e-2}`
 </details>
 
 <details>
