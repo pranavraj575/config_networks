@@ -235,7 +235,7 @@ class _CustomNNParallel(nn.Module):
         tails = []  # list of CustomNN objects that are the tails
         if layer_dict_lists is None:
             layer_dict_lists = [None for _ in input_shape]
-        assert len(input_shape) == len(layer_dict_lists)
+        assert len(input_shape) == len(layer_dict_lists), f"number of branches ({len(layer_dict_lists)}) must match length of input tuple ({len(input_shape)})"
         out_shapes = []
         for in_sh, layer_dict_list in zip(input_shape, layer_dict_lists):
             if layer_dict_list is None or len(layer_dict_list) == 0:
@@ -321,7 +321,7 @@ class _CustomNNParallel(nn.Module):
                 return pre_com
         elif self.combine_tails == "sum":
             if "combined_idxs" in self.extra_kwargs:
-                combined = sum([pre_com[comb_idx] for comb_idx in self.extra_kwargs["combined_idxs"]])
+                combined = torch.sum(torch.stack([pre_com[comb_idx] for comb_idx in self.extra_kwargs["combined_idxs"]],dim=0),dim=0)
                 uncombined = [pre_com[uncomb_idx] for uncomb_idx in self.extra_kwargs["uncombined_idxs"]]
                 uncombined.insert(
                     self.extra_kwargs.get("idx_of_combination", len(uncombined)),
@@ -329,7 +329,7 @@ class _CustomNNParallel(nn.Module):
                 )
                 return tuple(uncombined)
             else:
-                return sum(pre_com)
+                return torch.sum(torch.stack(pre_com,dim=0),dim=0)
         elif self.combine_tails == "concat":
             if "combined_idxs" in self.extra_kwargs:
                 combined = torch.concat(
