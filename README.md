@@ -233,6 +233,7 @@ Computes a tuple of k tensors independently, may merge at end of computation.
       I.e. if the output shape of branch 0 is `(5,)`, and of branch 1 is `((2,),(3,))`, the overall output shape will be
       `((5,),((2,),(3,)))` normally.
       If `"extract_sub_tuples":[1]`, the output shape will instead be `((5,),(2,),(3,))`.
+      [`net_configs/double_split_cnn.json`](net_configs/double_split_cnn.json) has an example of using this as described (though it is used in a `split` layer, the mechanism is the same).
     * For `"sum"`, the results of each branch will be summed.
       For this, each branch MUST have the same output dimension.
       If `"combined_idxs"` is additionally included (e.g. `"combined_idxs":[0,2]`), only the specified branches will be

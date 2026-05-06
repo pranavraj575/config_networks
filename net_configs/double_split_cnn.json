@@ -50,15 +50,9 @@
       "type": "flatten"
     },
     {
-      "type": "linear",
-      "out_features": 128,
-      "bias": false
-    },
-    {
-      "type": "ReLU"
-    },
-    {
       "type": "split",
+      "combination": "tuple",
+      "extract_sub_tuples": [1],
       "branches": [
         [
           {
@@ -100,8 +94,11 @@
         [
           {
             "type": "linear",
-            "out_features": 1,
+            "out_features": 5,
             "bias": false
+          },
+          {
+            "type": "LeakyReLU"
           }
         ]
       ]
