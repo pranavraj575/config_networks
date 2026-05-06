@@ -23,6 +23,8 @@ def get_output_shape(obj, unbatch):
         shape = obj.shape
         if unbatch:
             return tuple(shape[1:])
+        else:
+            return tuple(shape)
     else:
         return tuple(get_output_shape(o, unbatch) for o in obj)
 

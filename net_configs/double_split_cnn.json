@@ -52,7 +52,7 @@
     {
       "type": "split",
       "combination": "tuple",
-      "extract_sub_tuples": [1],
+      "extract_sub_tuples": [0],
       "branches": [
         [
           {

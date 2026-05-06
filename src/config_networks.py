@@ -263,9 +263,11 @@ class _CustomNNParallel(nn.Module):
                 for i, sh in enumerate(out_shapes):
                     if i in self.extra_kwargs["extract_sub_tuples"]:
                         # sh is a tuple of shapes, extend the array by these shapes
+                        assert type(sh[0]) is tuple, f'indices specified by "extract_sub_tuples" must be tuples, index {i} is a tensor'
                         self.output_shape.extend(sh)
                     else:
                         self.output_shape.append(sh)
+                self.output_shape = tuple(self.output_shape)
             else:
                 self.output_shape = out_shapes
         elif self.combine_tails == "sum":
