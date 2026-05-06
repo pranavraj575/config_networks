@@ -257,7 +257,7 @@ Example (this flattens both inputs, then concatenates them):
 
 ![](https://github.com/pranavraj575/config_networks/blob/main/images/visualize_multimodal.png)
 
-Example of using this to extract sub-tuples ([`net_configs/tuple_extraction.txt`](net_configs/tuple_extraction.txt)):
+Example of using this to extract (then concatenate) sub-tuples ([`net_configs/tuple_extraction.txt`](net_configs/tuple_extraction.txt)):
 
 ![](https://github.com/pranavraj575/config_networks/blob/main/images/visualize_tuple_extraction.png)
 
