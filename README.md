@@ -157,7 +157,7 @@ Example:
 </details>
 
 <details>
-<summary>Any module in torch.nn</summary>
+<summary><code>torch.nn.&lt;MODULE NAME&gt;</code></summary>
 
 Can retrieve any module in torch.nn, assuming the spelling and capitalization is correct.
 Relevant keyword arguments will be passed to the torch.nn init function.
@@ -166,9 +166,9 @@ Relevant keyword arguments will be passed to the torch.nn init function.
   This is necessary to calculate the input dimension of the next layer, and cannot be easily pulled from torch
   documentation.
 
-Example: `{"type": "LogSoftmax", "dim": -1, "output_shape": [4]}`
+Example: `{"type": "torch.nn.LogSoftmax", "dim": -1, "output_shape": [4]}`
 
-Alternatively: `{"type": "torch.nn.LogSoftmax", "dim": -1, "output_shape": [4]}`
+Alternatively works if `torch.nn` is unspecified: `{"type": "LogSoftmax", "dim": -1, "output_shape": [4]}`
 
 [`net_configs/resnet.txt`](net_configs/resnet.txt) has an example of using this to make a torch.nn.Softmax layer:
 
