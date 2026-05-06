@@ -64,7 +64,7 @@ torch layers respectively.
 
 These layers require no additional dictionary keys, and do not change the network shape.
 
-Example: `{ "type": "ReLU" }`
+Example: `{"type": "ReLU"}`
 
 </details>
 
@@ -73,7 +73,7 @@ Example: `{ "type": "ReLU" }`
 
 [LeakyReLU](https://docs.pytorch.org/docs/stable/generated/torch.nn.LeakyReLU.html) activation layer, has optional parameter `negative_slope` with default `"negative_slope":1e-2`.
 
-Example: `{ "type": "LeakyReLU", "negative_slope":1e-2 }`
+Example: `{"type": "LeakyReLU", "negative_slope":1e-2}`
 </details>
 
 <details>
@@ -83,7 +83,7 @@ The [Softmax](https://docs.pytorch.org/docs/stable/generated/torch.nn.Softmax.ht
 
 * `dim`: optional parameter with default `"dim": -1`, probability of element to be zeroed
 
-Example: `{ "type": "Softmax", "dim": -1 }`
+Example: `{"type": "Softmax", "dim": -1}`
 </details>
 
 <details>
@@ -98,7 +98,7 @@ torch layers respectively.
 
 * `p`: optional parameter with default `"p": 0.5`, probability of element to be zeroed
 
-Example: `{ "type": "Dropout", "p": 0.5 }`
+Example: `{"type": "Dropout", "p": 0.69}`
 </details>
 
 <details>
@@ -109,7 +109,7 @@ Example: `{ "type": "Dropout", "p": 0.5 }`
 * `start_dim`: optional parameter with default `"start_dim": 1`, represnents first dimension for flattening
 * `end_dim`: optional parameter with default `"end_dim": -1`, represents last dimension to be flattened
 
-Example: `{ "type": "Flatten", "start_dim": 1, "end_dim": -1 }`
+Example: `{"type": "Flatten", "start_dim": 1, "end_dim": -1}`
 </details>
 
 <details>
@@ -122,7 +122,7 @@ Example: `{ "type": "Flatten", "start_dim": 1, "end_dim": -1 }`
 
 Note that input_features is calculated automatically, and does not need to be specified.
 
-Example: `{ "type": "linear", "out_features": 128, "bias": False }`
+Example: `{"type": "linear", "out_features": 128, "bias": False}`
 </details>
 
 <details>
@@ -133,7 +133,7 @@ Example: `{ "type": "linear", "out_features": 128, "bias": False }`
 * `num_embeddings`: REQUIRED parameter, the number of unique embeddings to store
 * `embedding_dim`: REQUIRED parameter, the dimension of each embedding
 
-Example: `{ "type": "Embedding", "num_embeddings": 128, "embedding_dim": 512 }`
+Example: `{"type": "Embedding", "num_embeddings": 128, "embedding_dim": 512}`
 </details>
 
 <details>
@@ -149,13 +149,10 @@ torch layers respectively
 * `stride`: optional parameter with default `"stride": (1,1)`, stride to use
 * `padding`: optional parameter with default `"padding": (0,0)`, padding to use
 
-Example: `{
-    "type": "CNN",
+Example: `{"type": "CNN",
     "out_channels": 16,
     "kernel_size": [5, 5],
-    "stride": [3, 3],
-    "padding": [0, 0]
-}`
+    "stride": [3, 3]}`
 </details>
 
 <details>
@@ -168,9 +165,9 @@ Relevant keyword arguments will be passed to the torch.nn init function.
   This is necessary to calculate the input dimension of the next layer, and cannot be easily pulled from torch
   documentation.
 
-Example: `{ "type": "LogSoftmax", "dim": -1, "output_shape": [4] }`
+Example: `{"type": "LogSoftmax", "dim": -1, "output_shape": [4]}`
 
-Alternatively: `{ "type": "torch.nn.LogSoftmax", "dim": -1, "output_shape": [4] }`
+Alternatively: `{"type": "torch.nn.LogSoftmax", "dim": -1, "output_shape": [4]}`
 
 [`net_configs/resnet.txt`](net_configs/resnet.txt) has an example of using this to make a nn.LogSoftmax layer:
 
@@ -199,20 +196,16 @@ The input for each branch will be the output of the layer immediately before it.
 This is why we do not need to specify the input shape.
 
 Example (this sums an identity branch with a branch that computes a single linear layer):
-`{
-      "type": "split",
+`{"type": "split",
       "combination": "sum",
-      "branches": [
-        None,
+      "branches": [None,
         [
           {
             "type": "linear",
             "out_features": 64,
             "bias": false
           }
-        ]
-      ]
-    }
+        ]]}
 `
 
 Splitting once:
@@ -257,11 +250,9 @@ Computes a tuple of k tensors independently, may merge at end of computation.
       This will concatenate in the order specified by `"combined_idxs"`, or in default order if unspecified.
 
 Example (this flattens both inputs, then concatenates them):
-`{
-    "type": "parallel",
+`{"type": "parallel",
     "combination": "concat",
-    "branches": [[{"type": "flatten"}], [{"type": "flatten"}]]
-}`
+    "branches": [[{"type": "flatten"}], [{"type": "flatten"}]]}`
 
 
 [`net_configs/multimodal.txt`](net_configs/multimodal.txt) has an example of using these to take in (image, vector) input:
@@ -277,14 +268,10 @@ Repeats a block a certian number of times.
 * `count`: REQUIRED parameter, number of times to repeat block.
 
 Example (this repeats a linear+activation layer a few times):
-`{
-"type":"repeat",
-"count":69,
-"block":[
-    {"type":"linear", "out_features": 32},
-    {"type":"relu"}
-]
-}`
+`{"type":"repeat",
+    "count":69,
+    "block":[{"type":"linear", "out_features": 32},
+        {"type":"relu"}]}`
 
 [`net_configs/resnet.txt`](net_configs/resnet.txt) has an example of using this to make a resnet, which repeatedly computes `x'=f(x)+x`:
 
