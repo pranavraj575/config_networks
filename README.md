@@ -199,9 +199,8 @@ This is why we do not need to specify the input shape.
 Example (this sums an identity branch with a branch that computes a single linear layer):
 
 `{"type": "split",
-    "combination": "sum",
-    "branches": [None,
-    [{"type": "linear", "out_features": 64}]]}
+    "branches": [None, [{"type": "linear", "out_features": 64}]],
+    "combination": "sum",}
 `
 
 Splitting once:
