@@ -149,7 +149,8 @@ torch layers respectively
 * `stride`: optional parameter with default `"stride": (1,1)`, stride to use
 * `padding`: optional parameter with default `"padding": (0,0)`, padding to use
 
-Example: `{"type": "CNN",
+Example: 
+`{"type": "CNN",
     "out_channels": 16,
     "kernel_size": [5, 5],
     "stride": [3, 3]}`
@@ -196,16 +197,16 @@ The input for each branch will be the output of the layer immediately before it.
 This is why we do not need to specify the input shape.
 
 Example (this sums an identity branch with a branch that computes a single linear layer):
+
 `{"type": "split",
-      "combination": "sum",
-      "branches": [None,
-        [
-          {
+    "combination": "sum",
+    "branches": [None,
+    [
+        {
             "type": "linear",
-            "out_features": 64,
-            "bias": false
-          }
-        ]]}
+            "out_features": 64
+        }
+    ]]}
 `
 
 Splitting once:
@@ -250,6 +251,7 @@ Computes a tuple of k tensors independently, may merge at end of computation.
       This will concatenate in the order specified by `"combined_idxs"`, or in default order if unspecified.
 
 Example (this flattens both inputs, then concatenates them):
+
 `{"type": "parallel",
     "combination": "concat",
     "branches": [[{"type": "flatten"}], [{"type": "flatten"}]]}`
@@ -268,6 +270,7 @@ Repeats a block a certian number of times.
 * `count`: REQUIRED parameter, number of times to repeat block.
 
 Example (this repeats a linear+activation layer a few times):
+
 `{"type":"repeat",
     "count":69,
     "block":[{"type":"linear", "out_features": 32},
