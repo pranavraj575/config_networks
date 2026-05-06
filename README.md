@@ -230,16 +230,17 @@ Computes a tuple of k tensors independently, may merge at end of computation.
       Optional `"extract_sub_tuples"` argument, with defaut `"extract_sub_tuples":[]`.
       `"extract_sub_tuples"` is a list of indices for branches with tuple outputs that should be extracted and tupled at
       a higher level.
-      I.e. if the output shape of branch 0 is `(5,)`, and of branch 1 is `((2,),(3,))`, the overall output shape will be
-      `((5,),((2,),(3,)))` normally.
-      If `"extract_sub_tuples":[1]`, the output shape will instead be `((5,),(2,),(3,))`.
-      [`net_configs/double_split_cnn.json`](net_configs/double_split_cnn.json) has an example of using this as described (though it is used in a `split` layer, the mechanism is the same).
+      I.e. if the output shape of branch 0 is `(5,)`, branch 1 is `((2,),(3,))`, and branch 2 is `(4,)` the overall output shape will be
+      `((5,),((2,),(3,)),(4,))` normally.
+      If `"extract_sub_tuples":[1]`, the output shape will instead be `((5,),(2,),(3,),(4,))`.
+      [`net_configs/tuple_extraction.txt`](net_configs/tuple_extraction.txt) has an example of using this as described.
     * For `"sum"`, the results of each branch will be summed.
       For this, each branch MUST have the same output dimension.
       If `"combined_idxs"` is additionally included (e.g. `"combined_idxs":[0,2]`), only the specified branches will be
       summed.
       The result will be a tuple of (uncombined branch 0, uncombined branch 1, ... , sum of combined branches)
-      If `"idx_of_combination"` is specified, the combination will be placed at this index.
+      If `"idx_of_combination"` is specified, the combination will be placed at this index (otherwise it will be placed last).
+      [`net_configs/tuple_sum.txt`](net_configs/tuple_sum.txt) and [`net_configs/tuple_sum_specific_indices.txt`](net_configs/tuple_sum_specific_indices.txt) have examples of using this as described.
     * For `"concat"`, the results of each branch will be concatenated.
       The dimension of concatenation will be the optional `dim` key, with default `"dim":-1`.
       This can also specify `"combined_idxs"` with the same behavior as in `sum`.
@@ -255,6 +256,15 @@ Example (this flattens both inputs, then concatenates them):
 [`net_configs/multimodal.txt`](net_configs/multimodal.txt) has an example of using these to take in (image, vector) input:
 
 ![](https://github.com/pranavraj575/config_networks/blob/main/images/visualize_multimodal.png)
+
+Example of using this to extract sub-tuples ([`net_configs/tuple_extraction.txt`](net_configs/tuple_extraction.txt)):
+
+![](https://github.com/pranavraj575/config_networks/blob/main/images/visualize_tuple_extraction.png)
+
+Example of using this to sum all branches ([`net_configs/tuple_sum.txt`](net_configs/tuple_sum.txt)), and specific branches ([`net_configs/tuple_sum_specific_indices.txt`](net_configs/tuple_sum_specific_indices.txt)):
+
+![](https://github.com/pranavraj575/config_networks/blob/main/images/visualize_tuple_sum.png)
+![](https://github.com/pranavraj575/config_networks/blob/main/images/visualize_tuple_sum_specific_indices.png)
 </details>
 
 <details>
