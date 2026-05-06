@@ -93,10 +93,7 @@ def layer_from_config_dict(dic, input_shape, only_shape=False):
                 in_features=input_shape[-1],
                 **get_kwargs(nn.Linear, dic),
             )
-        shape = (
-            *(input_shape[:-1]),
-            out_features,
-        )
+        shape = list(input_shape[:-1]) + [out_features]
     elif typ == "flatten":
         start_dim = dic.get("start_dim", 1)
         end_dim = dic.get("end_dim", -1)
@@ -120,7 +117,7 @@ def layer_from_config_dict(dic, input_shape, only_shape=False):
         assert "num_embeddings" in dic and "embedding_dim" in dic, "REQUIRED arguments num_embeddings and embedding_dim"
         if not only_shape:
             layer = nn.Embedding(**get_kwargs(nn.Embedding, dic))
-        shape = (dic["embedding_dim"],)
+        shape = list(input_shape) + [dic["embedding_dim"]]
     # image stuff has annoying output shape calculation
     # only need to write it once
     elif typ in cnn_layers:

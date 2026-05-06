@@ -18,6 +18,26 @@ kernel_sizes = [2, [2, 3]]
 paddings = [0, 1, [0, 1]]
 strides = [1, 4, [2, 3]]
 
+dicts = (
+    [
+        {"type": "flatten"},
+        {"type": "flatten", "end_dim": 1},
+        {"type": "embedding", "num_embeddings": 128, "embedding_dim": 512},
+    ]
+    + [
+        {"type": type_}
+        for type_ in (
+            "identity",
+            "relu",
+            "sigmoid",
+            "leakyrelu",
+            "tanh",
+            "dropout",
+        )
+    ]
+    + [{"type": "linear", "out_features": out_features} for out_features in output_features]
+)
+
 
 @pytest.mark.parametrize(
     "type_",
@@ -105,36 +125,22 @@ def test_easy(type_, shape):
     shapes,
 )
 @pytest.mark.parametrize(
-    "out_features",
-    output_features,
-)
-def test_linear(shape, out_features):
-    layer, output_shape = layer_from_config_dict(
-        dic={"type": "linear", "out_features": out_features},
-        input_shape=shape,
-    )
-    assert layer is not None
-
-    input = torch.normal(0, 1, size=shape)
-    output = layer(input)
-    assert tuple(output.shape) == tuple(output_shape)
-
-
-@pytest.mark.parametrize(
-    "shape",
-    shapes,
+    "dic",
+    dicts,
 )
 @pytest.mark.parametrize(
     "batch_size",
     batch_sizes,
 )
-def test_flatten(shape, batch_size):
+def test_dicts(shape, dic, batch_size):
     layer, output_shape = layer_from_config_dict(
-        dic={"type": "flatten"},
+        dic=dic,
         input_shape=shape,
     )
     assert layer is not None
-
-    input = torch.normal(0, 1, size=[batch_size] + list(shape))
+    if dic["type"].lower() == "embedding":
+        input = torch.randint(0, dic.get("num_embeddings", 1), size=[batch_size] + list(shape))
+    else:
+        input = torch.normal(0, 1, size=[batch_size] + list(shape))
     output = layer(input)
     assert tuple(output.shape) == tuple([batch_size] + list(output_shape))
