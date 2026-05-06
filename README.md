@@ -201,12 +201,7 @@ Example (this sums an identity branch with a branch that computes a single linea
 `{"type": "split",
     "combination": "sum",
     "branches": [None,
-    [
-        {
-            "type": "linear",
-            "out_features": 64
-        }
-    ]]}
+    [{"type": "linear", "out_features": 64}]]}
 `
 
 Splitting once:
