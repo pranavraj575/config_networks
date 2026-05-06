@@ -284,6 +284,7 @@ class _CustomNNParallel(nn.Module):
                     self.extra_kwargs.get("idx_of_combination", len(self.output_shape)),
                     comb_shape,
                 )
+                self.output_shape = tuple(self.output_shape)
             else:
                 self.output_shape = comb_shape
         elif self.combine_tails == "concat":
