@@ -1,0 +1,48 @@
+{
+    'input_shape': (((10,),(11,),(12,),(13,)),(8, 240, 320)),
+    'layers':
+        [
+            {
+                'type': 'parallel',
+                'combination': 'tuple',
+                'extract_sub_tuples': (0,), # extracts the nested tuple of vectors in position 0
+                'branches': [
+                    None, # do no computation to the tuple
+                    [
+                    {
+                        'type': 'maxpool',
+                        'kernel_size': (2, 2),
+                        'stride': (2, 2),
+                    },
+                    {
+                        'type': 'CNN',
+                        'out_channels': 16,
+                        'kernel_size': (5, 5),
+                        'stride': (3, 3),
+                        'padding': (0, 0),
+                    },
+                    {
+                        'type': 'ReLU',
+                    },
+                    {
+                        'type': 'maxpool',
+                        'kernel_size': (2, 2),
+                        'stride': (2, 2),
+                    },
+                    {
+                        'type': 'flatten',
+                    },
+                    {
+                        'type': 'linear',
+                        'out_features': 64,
+                    },
+                    ]
+                ]
+            },
+            {
+                'type': 'parallel',
+                'combination': 'concat',
+                'branches': [None, None, None, None, None], # do no computation, just concatenate all branches
+            },
+        ],
+}
