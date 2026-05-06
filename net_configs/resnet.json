@@ -48,7 +48,7 @@
       "bias": true
     },
     {
-      "type": "LogSoftmax",
+      "type": "torch.nn.LogSoftmax",
       "dim": -1,
       "output_shape": [
         4

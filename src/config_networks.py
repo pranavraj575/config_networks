@@ -53,7 +53,7 @@ def layer_from_config_dict(dic, input_shape, only_shape=False):
         layer, output shape (tuple or none)
     """
     assert input_shape is not None
-    Typ = dic["type"]
+    Typ: str = dic["type"]
     typ = Typ.lower()
     layer = None
 
@@ -158,7 +158,9 @@ def layer_from_config_dict(dic, input_shape, only_shape=False):
         if not only_shape:
             layer = Layer(**get_kwargs(Layer, dic))
         shape = (out_channels, Hp, Wp)
-    elif Typ in dir(nn):
+    elif Typ in dir(nn) or (Typ.startswith("torch.nn.") and Typ[len("torch.nn.") :] in dir(nn)):
+        if Typ[len("torch.nn.") :] in dir(nn):
+            Typ = Typ[len("torch.nn.") :]
         # needs this to calculate next layer, if we are using unknown torch layers
         assert "output_shape" in dic, "output_shape required for torch layers"
         Layer = getattr(nn, Typ)

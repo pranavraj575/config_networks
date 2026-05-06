@@ -38,12 +38,15 @@
                 ],
             },
             {
-                'type':'linear',
+                'type':'torch.nn.Linear', # this will be pulled from torch.nn
                 'out_features':4,
                 'bias':True,
+                'in_features': 64, # because this is pulled from torch.nn, we must manually put in the input dimensions
+                                   #   (if we used 'type': 'linear' we would not need to do this)
+                'output_shape':(4,), # because this is pulled from torch.nn, we must specify output shape
             },
             { # this layer is not explicitly handled, so it will be pulled from torch.nn
-                'type':'LogSoftmax',
+                'type':'LogSoftmax', # can alternatively be 'torch.nn.LogSoftmax'
                 'dim':-1,
                 'output_shape':(4,), # because we do not explictly compute the output shape of this layer, we must specify it herer
             },

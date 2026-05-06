@@ -33,7 +33,8 @@
       ]
     },
     {
-      "type": "ReLU"
+      "type": "LeakyReLU",
+      "negative_slope": 1e-2
     },
     {
       "type": "maxpool",
