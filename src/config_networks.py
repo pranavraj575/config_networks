@@ -155,12 +155,19 @@ def layer_from_config_dict(dic, input_shape, only_shape=False):
         if not only_shape:
             layer = Layer(**get_kwargs(Layer, dic))
         shape = (out_channels, Hp, Wp)
-    elif Typ in dir(nn) or (Typ.startswith("torch.nn.") and Typ[len("torch.nn.") :] in dir(nn)):
+    elif (Typ in dir(nn)) or (Typ.startswith("torch.nn.") and Typ[len("torch.nn.") :] in dir(nn)):
         if Typ[len("torch.nn.") :] in dir(nn):
             Typ = Typ[len("torch.nn.") :]
+        Layer = getattr(nn, Typ)
         # needs this to calculate next layer, if we are using unknown torch layers
         assert "output_shape" in dic, "output_shape required for torch layers"
-        Layer = getattr(nn, Typ)
+        kwargs = get_kwargs(Layer, dic)
+        layer = Layer(**kwargs)
+        shape = dic["output_shape"]
+    elif typ == "custom":
+        assert "output_shape" in dic, "output_shape required for custom layers"
+        assert "module" in dic, "module required for custom layers"
+        Layer = dic["module"]
         kwargs = get_kwargs(Layer, dic)
         layer = Layer(**kwargs)
         shape = dic["output_shape"]

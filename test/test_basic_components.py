@@ -144,3 +144,21 @@ def test_dicts(shape, dic, batch_size):
         input = torch.normal(0, 1, size=[batch_size] + list(shape))
     output = layer(input)
     assert tuple(output.shape) == tuple([batch_size] + list(output_shape))
+
+
+@pytest.mark.parametrize(
+    "shape",
+    shapes,
+)
+def test_custom_layer(shape):
+    class Invert(torch.nn.Module):
+        def forward(self, X):
+            return -X
+
+    layer, output_shape = layer_from_config_dict(
+        {"type": "custom", "module": Invert, "output_shape": shape},
+        input_shape=shape,
+    )
+    assert layer is not None
+    y = layer(torch.rand(shape))
+    assert tuple(y.shape) == output_shape

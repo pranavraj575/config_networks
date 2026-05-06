@@ -129,3 +129,42 @@ def test_train(batch_size, network_file):
     assert not equality(output, output2)
     # check if ALL the weights changed
     assert not any(network_equalities(network, network2))
+
+
+@pytest.mark.parametrize(
+    "shape",
+    [
+        [1, 2, 3],
+        [3],
+        [4, 5, 6],
+        [7, 9],
+        [1],
+    ],
+)
+@pytest.mark.parametrize(
+    "seed",
+    list(range(69)),
+)
+def test_custom(shape, seed):
+    torch.random.manual_seed(seed)
+
+    class Invert(torch.nn.Module):
+        def forward(self, X):
+            return -X
+
+    structure = {
+        "input_shape": shape,
+        "layers": [
+            {
+                "type": "split",
+                "combination": "sum",
+                "branches": [
+                    None,
+                    [{"type": "custom", "module": Invert, "output_shape": shape}],
+                ],
+            }
+        ],
+    }
+
+    network = CustomNN(structure)
+    assert torch.all(torch.eq(network(torch.rand(shape)), 0))

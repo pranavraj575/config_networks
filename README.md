@@ -159,7 +159,7 @@ Example:
 <details>
 <summary>Any module in torch.nn</summary>
 
-Also can retrieve any module in torch.nn, assuming the spelling and capitalization is correct.
+Can retrieve any module in torch.nn, assuming the spelling and capitalization is correct.
 Relevant keyword arguments will be passed to the torch.nn init function.
 
 * `output_shape`: REQUIRED parameter, the unbatched output shape after this layer is passed
@@ -173,6 +173,24 @@ Alternatively: `{"type": "torch.nn.LogSoftmax", "dim": -1, "output_shape": [4]}`
 [`net_configs/resnet.txt`](net_configs/resnet.txt) has an example of using this to make a torch.nn.Softmax layer:
 
 ![](https://github.com/pranavraj575/config_networks/blob/main/images/visualize_resnet.png)
+</details>
+
+<details>
+<summary><code>custom</code></summary>
+
+Can retrieve a custom module (that inherits torch.nn.Module).
+Relevant keyword arguments will be passed to the module init function.
+
+* `module`: REQUIRED parameter, the constructor of the custom module.
+* `output_shape`: REQUIRED parameter, the unbatched output shape after this layer is passed
+  This is necessary to calculate the input dimension of the next layer, and cannot be easily pulled from torch
+  documentation.
+
+Example: `{"type": "custom", "module": Invert, "output_shape": [10]}`
+
+Example of this is in [`example\use_custom_module.py`](example\use_custom_module.py):
+
+![](https://github.com/pranavraj575/config_networks/blob/main/images/visualize_custom.png)
 </details>
 
 <details>

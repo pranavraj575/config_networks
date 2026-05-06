@@ -101,6 +101,7 @@ for filename in args.config_file:
             depth=args.recursion_depth,
             device="cpu",
         )
+
     if args.save_gif:
         output_gif = os.path.join(args.output_dir, f"visualize_{model_name}.gif")
 
