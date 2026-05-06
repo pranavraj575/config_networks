@@ -1,6 +1,6 @@
-# Network generated from config file
+# Lightweight repository for building torch networks from a config file
 
-<img src="https://github.com/pranavraj575/config_networks/blob/main/images/visualize_small_split_recombine_cnn.gif" width="40%" />&nbsp;&nbsp;&nbsp;<img src="https://github.com/pranavraj575/config_networks/blob/main/images/visualize_resnet.gif" width="40%" />
+<img src="https://github.com/pranavraj575/config_networks/blob/main/images/visualize_small_split_recombine_cnn.gif" width="45%" />&nbsp;&nbsp;&nbsp;<img src="https://github.com/pranavraj575/config_networks/blob/main/images/visualize_resnet.gif" width="45%" />
 
 For examples of config dicts, look in `net_configs`.
 To generate a network given a dictionary, use `net = CustomNN(structure=config_dict)`.
@@ -287,3 +287,9 @@ pip install torchview
 ```
 
 Example script to make visualization of a .json config file is [`example/viz.py`](example/viz.py)
+
+Result of `python example/viz.py --config_file net_configs/small_split_recombine_cnn.json --save_gif --duration 200 --scroll 10`:
+![](https://github.com/pranavraj575/config_networks/blob/main/images/visualize_small_split_recombine_cnn.gif)
+
+Result of `python example/viz.py --config_file net_configs/resnet.txt --save_gif --duration 200 --scroll 10`:
+![](https://github.com/pranavraj575/config_networks/blob/main/images/visualize_resnet.gif)
