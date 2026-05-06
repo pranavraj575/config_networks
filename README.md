@@ -271,9 +271,9 @@ Repeats a block a certian number of times.
 
 Example (this repeats a linear+activation layer a few times):
 
-`{"type":"repeat",
-    "count":69,
-    "block":[{"type":"linear", "out_features": 32},
+`{"type": "repeat",
+    "count": 69,
+    "block": [{"type":"linear", "out_features": 32},
         {"type":"relu"}]}`
 
 [`net_configs/resnet.txt`](net_configs/resnet.txt) has an example of using this to make a resnet, which repeatedly computes `x'=f(x)+x`:
