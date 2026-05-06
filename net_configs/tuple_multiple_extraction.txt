@@ -1,0 +1,60 @@
+{
+    'input_shape': (((10,),(11,),(12,),(13,)),(8, 240, 320),((69,),(68,),(67,),(66,))),
+    'layers':
+        [
+            {
+                'type': 'parallel',
+                'combination': 'tuple',
+                'extract_sub_tuples': (0,2), # extracts both nested tuples of vectors
+                'branches': [
+                    None, # do no computation to the tuple
+                    [
+                    {
+                        'type': 'maxpool',
+                        'kernel_size': (2, 2),
+                        'stride': (2, 2),
+                    },
+                    {
+                        'type': 'CNN',
+                        'out_channels': 16,
+                        'kernel_size': (5, 5),
+                        'stride': (3, 3),
+                        'padding': (0, 0),
+                    },
+                    {
+                        'type': 'ReLU',
+                    },
+                    {
+                        'type': 'maxpool',
+                        'kernel_size': (2, 2),
+                        'stride': (2, 2),
+                    },
+                    {
+                        'type': 'flatten',
+                    },
+                    {
+                        'type': 'linear',
+                        'out_features': 64,
+                    },
+                    ],
+                    None, # do no computation to the tuple
+                ]
+            },
+            {
+                'type': 'parallel',
+                'combination': 'sum',
+                "combined_idxs":[0,2,4,6,8],
+                'branches': [
+                    [{'type': 'linear','out_features': 13}],
+                    None,
+                    [{'type': 'linear','out_features': 13}],
+                    None,
+                    [{'type': 'linear','out_features': 13}],
+                    None,
+                    [{'type': 'linear','out_features': 13}],
+                    None,
+                    [{'type': 'linear','out_features': 13}],
+                    ],
+            },
+        ],
+}
