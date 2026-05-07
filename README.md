@@ -331,7 +331,9 @@ pip install torchview
 Example script to make visualization of a .json config file is [`example/viz.py`](example/viz.py)
 
 Result of `python example/viz.py --config_file net_configs/small_split_recombine_cnn.json --save_gif --duration 200 --scroll 10`:
+
 ![](https://github.com/pranavraj575/config_networks/blob/main/images/visualize_small_split_recombine_cnn.gif)
 
 Result of `python example/viz.py --config_file net_configs/resnet.txt --save_gif --duration 200 --scroll 10`:
+
 ![](https://github.com/pranavraj575/config_networks/blob/main/images/visualize_resnet.gif)
