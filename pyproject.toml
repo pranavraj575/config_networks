@@ -1,5 +1,6 @@
 [project]
 name = "config_networks"
+version = "0.6.9"
 authors = [
     { name = "Pranav", email = "prajbhan@cs.cmu.edu" },
 ]
