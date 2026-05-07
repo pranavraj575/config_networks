@@ -218,7 +218,7 @@ Example (this splits into an identity branch, and a branch that computes a singl
 
 `{"type": "split",
     "branches": [None, [{"type": "linear", "out_features": 64}]],
-    "combination": "sum"}
+    "combination": "tuple"}
 `
 
 ![](https://github.com/pranavraj575/config_networks/blob/main/images/visualize_split_example.png)
