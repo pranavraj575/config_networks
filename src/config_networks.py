@@ -282,6 +282,7 @@ class _CustomNNParallel(nn.Module):
         elif self.combine_tails == "sum":
             combined_idxs = self.extra_kwargs.get("combined_idxs", list(range(len(out_shapes))))
             comb_shape = out_shapes[combined_idxs[0]]
+            assert all(out_shapes[idx] ==comb_shape for idx in combined_idxs), f"when combining with sum, all shapes should be same size. Got {out_shapes}"
             if "combined_idxs" in self.extra_kwargs:
                 self.output_shape = []
                 for i, sh in enumerate(out_shapes):

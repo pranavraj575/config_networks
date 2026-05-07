@@ -36,21 +36,6 @@ def generate_random_input(batch_size, input_shape, seed=torch.tensor(0)):
         return tuple(generate_random_input(batch_size, s, seed=seed) for s in input_shape)
 
 
-class INPUT_TENSOR(torch.nn.Module):
-    def __init__(self, input_shape, batch_size=1):
-        super().__init__()
-        self.input_shape = input_shape
-        self.batch_size = batch_size
-
-    def forward(self, X):
-        seed = torch.sum(X)
-        return generate_random_input(
-            batch_size=self.batch_size,
-            input_shape=self.input_shape,
-            seed=seed,
-        )
-
-
 p = argparse.ArgumentParser()
 p.add_argument(
     "--config_file",
@@ -89,11 +74,9 @@ for filename in args.config_file:
             device="cpu",
         )
     except RuntimeError:
-        model = torch.nn.Sequential(INPUT_TENSOR(input_shape=structrue["input_shape"]), model)
-        x = torch.rand(1)
         model_graph = torchview.draw_graph(
             model,
-            input_data=x,
+            input_data=(x,),
             expand_nested=True,
             save_graph=True,
             directory=args.output_dir,

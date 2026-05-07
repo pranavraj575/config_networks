@@ -214,12 +214,14 @@ A example of splitting multiple times is in [`net_configs/double_split_cnn.json`
 The input for each branch will be the output of the layer immediately before it.
 This is why we do not need to specify the input shape.
 
-Example (this sums an identity branch with a branch that computes a single linear layer):
+Example (this splits into an identity branch, and a branch that computes a single linear layer):
 
 `{"type": "split",
     "branches": [None, [{"type": "linear", "out_features": 64}]],
     "combination": "sum"}
 `
+
+![](https://github.com/pranavraj575/config_networks/blob/main/images/visualize_split_example.png)
 
 Splitting once:
 
@@ -272,6 +274,7 @@ Example (this flattens both inputs, then concatenates them):
     "combination": "concat",
     "branches": [[{"type": "flatten"}], [{"type": "flatten"}]]}`
 
+![](https://github.com/pranavraj575/config_networks/blob/main/images/visualize_parallel_example.png)
 
 [`net_configs/multimodal.txt`](net_configs/multimodal.txt) has an example of using these to take in (image, vector) input:
 
@@ -298,14 +301,16 @@ Example of using this to extract (then sum) multiple sub-tuples ([`net_configs/t
 Repeats a block a certian number of times.
 
 * `block`: REQUIRED parameter, list of layer dictionaries to be repeatedly added.
-* `count`: REQUIRED parameter, number of times to repeat block.
+* `times`: REQUIRED parameter, number of times to repeat block.
 
 Example (this repeats a linear+activation layer a few times):
 
 `{"type": "repeat",
-    "count": 69,
+    "times": 3,
     "block": [{"type": "linear", "out_features": 32},
         {"type": "relu"}]}`
+
+![](https://github.com/pranavraj575/config_networks/blob/main/images/visualize_repeat_example.png)
 
 [`net_configs/resnet.txt`](net_configs/resnet.txt) has an example of using this to make a resnet, which repeatedly computes `x'=f(x)+x`:
 
