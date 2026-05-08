@@ -177,6 +177,15 @@ def layer_from_config_dict(dic, input_shape, only_shape=False):
     return layer, shape
 
 
+def convert_shape(shape):
+    if type(shape) is dict:
+        return {k: convert_shape(s) for k, s in shape.items()}
+    elif type(shape[0]) is int:
+        return tuple(shape)
+    else:
+        return tuple(convert_shape(s) for s in shape)
+
+
 class _CustomNNSplit(nn.Module):
     """
     Network to split an input into a tuple, applying each specified head to the input
@@ -193,7 +202,7 @@ class _CustomNNSplit(nn.Module):
             layer_dict_lists: list of lists of layer dicts
         """
         super().__init__()
-
+        input_shape = convert_shape(input_shape)
         heads = []  # list of CustomNN objects that are the heads
         output_shapes = []
         for layer_dict_list in layer_dict_lists:
@@ -239,6 +248,7 @@ class _CustomNNParallel(nn.Module):
             combine_tails: how to combine the tuple
         """
         super().__init__()
+        input_shape = convert_shape(input_shape)
         if layer_dict_lists is None:
             layer_dict_lists = [None for _ in input_shape]
         assert len(input_shape) == len(layer_dict_lists), (
@@ -281,8 +291,10 @@ class _CustomNNParallel(nn.Module):
                 self.output_shape = out_shapes
             if self.combine_tails == "dict":
                 assert "output_keys" in self.extra_kwargs, "if converting tuple to dict, 'output_keys' must be specified"
-                assert len(self.extra_kwargs["output_keys"])==len(self.output_shape), f'number of output keys must be match number of elements in the tuple ({len(self.output_shape)}). recieved keys {self.extra_kwargs["output_keys"]}'
-                self.output_shape= {key_i:output_keys_i for key_i,output_keys_i in zip(self.extra_kwargs["output_keys"],self.output_shape)}
+                assert len(self.extra_kwargs["output_keys"]) == len(self.output_shape), (
+                    f"number of output keys must be match number of elements in the tuple ({len(self.output_shape)}). recieved keys {self.extra_kwargs['output_keys']}"
+                )
+                self.output_shape = {key_i: output_keys_i for key_i, output_keys_i in zip(self.extra_kwargs["output_keys"], self.output_shape)}
         elif self.combine_tails == "sum":
             combined_idxs = self.extra_kwargs.get("combined_idxs", list(range(len(out_shapes))))
             comb_shape = out_shapes[combined_idxs[0]]
@@ -324,7 +336,7 @@ class _CustomNNParallel(nn.Module):
 
     def forward(self, X):
         pre_com = tuple(tail(X_i) for tail, X_i in zip(self.tails, X))
-        if self.combine_tails == "tuple" or self.combine_tails=='dict':
+        if self.combine_tails == "tuple" or self.combine_tails == "dict":
             if "extract_sub_tuples" in self.extra_kwargs:
                 out = []
                 for i, tail_output in enumerate(pre_com):
@@ -333,11 +345,11 @@ class _CustomNNParallel(nn.Module):
                         out.extend(tail_output)
                     else:
                         out.append(tail_output)
-                output= tuple(out)
+                output = tuple(out)
             else:
-                output=pre_com
-            if self.combine_tails=='dict':
-                return {k:output_k for k,output_k in zip(self.extra_kwargs["output_keys"],output)}
+                output = pre_com
+            if self.combine_tails == "dict":
+                return {k: output_k for k, output_k in zip(self.extra_kwargs["output_keys"], output)}
             else:
                 return output
         elif self.combine_tails == "sum":
@@ -375,11 +387,11 @@ class _CustomNNParallelDict(nn.Module):
     """
 
     def __init__(
-            self,
-            input_shape,
-            layer_dict_lists=None,
-            combine_tails="dict",
-            **kwargs,
+        self,
+        input_shape,
+        layer_dict_lists=None,
+        combine_tails="dict",
+        **kwargs,
     ):
         """
         Args:
@@ -391,68 +403,74 @@ class _CustomNNParallelDict(nn.Module):
             combine_tails: how to combine the tuple
         """
         super().__init__()
-        assert type(input_shape) is dict,"input type must be dict for this module"
+        input_shape = convert_shape(input_shape)
+        assert type(input_shape) is dict, "input type must be dict for this module"
         if layer_dict_lists is None:
-            layer_dict_lists = {k:None for k in input_shape}
-        assert set(input_shape.keys())==set(layer_dict_lists.keys()), f"branch keys ({layer_dict_lists.keys()}) must match input keys ({input_shape.keys()})"
-        self.keys=set(input_shape.keys())
+            layer_dict_lists = {k: None for k in input_shape}
+        assert set(input_shape.keys()) == set(layer_dict_lists.keys()), (
+            f"branch keys ({layer_dict_lists.keys()}) must match input keys ({input_shape.keys()})"
+        )
+        self.keys = set(input_shape.keys())
         tails = dict()  # dict of CustomNN objects that are the tails
         out_shapes = dict()
         for key in self.keys:
-            layer_dict_list=layer_dict_lists[key]
-            in_sh=input_shape[key]
+            layer_dict_list = layer_dict_lists[key]
+            in_sh = input_shape[key]
             if layer_dict_list is None or len(layer_dict_list) == 0:
-                tails[key]=nn.Identity()
-                out_shapes[key]=in_sh
+                tails[key] = nn.Identity()
+                out_shapes[key] = in_sh
             else:
                 structure = {
                     "input_shape": in_sh,
                     "layers": layer_dict_list,
                 }
                 tail = CustomNN(structure=structure)
-                tails[key]=tail
-                out_shapes[key]=tail.output_shape
-        self.tails=nn.ModuleDict(tails)
+                tails[key] = tail
+                out_shapes[key] = tail.output_shape
+        self.tails = nn.ModuleDict(tails)
         self.combine_tails = combine_tails
         self.extra_kwargs = kwargs
 
         if self.combine_tails == "dict":
-            if 'output_keys_to_combination' in self.extra_kwargs:
-                self.output_shape=dict()
-                self.final_layer=dict()
-                for key,combination_dict in self.extra_kwargs['output_keys_to_combination'].items():
-                    assert 'input_keys' in combination_dict, f"must specify which keys to use when combining to make '{key}'"
-                    self.final_layer[key]=_CustomNNParallel(
-                        input_shape=tuple(out_shapes[k] for k in combination_dict['input_keys']),
+            if "output_keys_to_combination" in self.extra_kwargs:
+                self.output_shape = dict()
+                self.final_layer = dict()
+                for key, combination_dict in self.extra_kwargs["output_keys_to_combination"].items():
+                    assert "input_keys" in combination_dict, f"must specify which keys to use when combining to make '{key}'"
+                    self.final_layer[key] = _CustomNNParallel(
+                        input_shape=tuple(out_shapes[k] for k in combination_dict["input_keys"]),
                         layer_dict_lists=None,
-                        combine_tails=combination_dict['combination'],
+                        combine_tails=combination_dict["combination"],
                         **combination_dict,
                     )
-                    self.output_shape[key]=self.final_layer[key].output_shape
-                self.final_layer=nn.ModuleDict(self.final_layer)
+                    self.output_shape[key] = self.final_layer[key].output_shape
+                self.final_layer = nn.ModuleDict(self.final_layer)
             else:
                 self.output_shape = out_shapes
-                self.final_layer=nn.Identity()
+                self.final_layer = nn.Identity()
         else:
             assert "key_order" in self.extra_kwargs, "if combining all elements of dict, must specify order"
-            self.final_layer=_CustomNNParallel(
-                input_shape=tuple(out_shapes[k] for k in self.extra_kwargs['key_order']),
+            self.final_layer = _CustomNNParallel(
+                input_shape=tuple(out_shapes[k] for k in self.extra_kwargs["key_order"]),
                 layer_dict_lists=None,
                 combine_tails=self.combine_tails,
                 **kwargs,
             )
-            self.output_shape=self.final_layer.output_shape
+            self.output_shape = self.final_layer.output_shape
 
     def forward(self, X):
-        pre_com = {k:self.tails[k](X[k]) for k in self.keys}
+        pre_com = {k: self.tails[k](X[k]) for k in self.keys}
         if self.combine_tails == "dict":
-            if 'output_keys_to_combination' in self.extra_kwargs:
-                return {key:self.final_layer[key](tuple(pre_com[k] for k in combination_dict['input_keys']))
-                        for key,combination_dict in self.extra_kwargs['output_keys_to_combination'].items()}
+            if "output_keys_to_combination" in self.extra_kwargs:
+                return {
+                    key: self.final_layer[key](tuple(pre_com[k] for k in combination_dict["input_keys"]))  # pyright: ignore[reportIndexIssue]
+                    for key, combination_dict in self.extra_kwargs["output_keys_to_combination"].items()
+                }
             else:
                 return pre_com
         else:
-            return self.final_layer(tuple(pre_com[k] for k in self.extra_kwargs['key_order']))
+            return self.final_layer(tuple(pre_com[k] for k in self.extra_kwargs["key_order"]))  # pyright: ignore[reportCallIssue]
+
 
 class CustomNN(nn.Module):
     """
@@ -475,6 +493,7 @@ class CustomNN(nn.Module):
         assert "layers" in structure, "config dict must contain key 'layers'"
         assert "input_shape" in structure, "config dict must contain key 'input_shape'"
         shape = structure["input_shape"]
+        shape = convert_shape(shape)
         layers = []
         for i, dic in enumerate(structure["layers"]):
             if dic["type"] == "split":
@@ -496,7 +515,7 @@ class CustomNN(nn.Module):
                         layers.append(merge_lyr)
                         shape = merge_lyr.output_shape
             elif dic["type"] == "parallel":
-                branches=dic.get("branches", None)
+                branches = dic.get("branches", None)
                 if type(branches) is dict:
                     par_lyr = _CustomNNParallelDict(
                         input_shape=shape,

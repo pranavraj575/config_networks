@@ -31,7 +31,7 @@ def generate_random_input(batch_size, input_shape, seed=torch.tensor(0)):
     ensures gradients flow to seed
     """
     if type(input_shape) is dict:
-        return {k:generate_random_input(batch_size, s, seed=seed) for k,s in input_shape.items()}
+        return {k: generate_random_input(batch_size, s, seed=seed) for k, s in input_shape.items()}
     elif type(input_shape[0]) is int:
         return torch.normal(0, 1, (batch_size,) + tuple(input_shape)) + seed
     else:

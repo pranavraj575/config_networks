@@ -13,7 +13,7 @@ network_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__fil
 
 def generate_random_input(batch_size, input_shape):
     if type(input_shape) is dict:
-        return {k:generate_random_input(batch_size, s) for k,s in input_shape.items()}
+        return {k: generate_random_input(batch_size, s) for k, s in input_shape.items()}
     elif type(input_shape[0]) is int:
         return torch.normal(0, 1, (batch_size,) + tuple(input_shape))
     else:
@@ -28,7 +28,7 @@ def get_output_shape(obj, unbatch):
         else:
             return tuple(shape)
     elif type(obj) is dict:
-        return {k:get_output_shape(o, unbatch) for k,o in obj.items()}
+        return {k: get_output_shape(o, unbatch) for k, o in obj.items()}
     else:
         return tuple(get_output_shape(o, unbatch) for o in obj)
 
@@ -36,6 +36,8 @@ def get_output_shape(obj, unbatch):
 def equality(a, b):
     if isinstance(a, torch.Tensor):
         return torch.equal(a, b)
+    elif type(a) is dict:
+        return (type(b) is dict) and (set(a.keys()) == set(b.keys())) and all(equality(a[k], b[k]) for k in a.keys())
     else:
         return all(equality(ap, bp) for ap, bp in zip(a, b))
 
@@ -52,7 +54,7 @@ def network_equalities(net1, net2):
 )
 @pytest.mark.parametrize(
     "network_file",
-    [os.path.join(network_dir, fn) for fn in os.listdir(network_dir) if 'dict' in fn],
+    [os.path.join(network_dir, fn) for fn in os.listdir(network_dir) if "dict" in fn],
 )
 def test_networks(batch_size, network_file):
     f = open(network_file, "r")
@@ -118,6 +120,8 @@ def test_train(batch_size, network_file):
     def loss(t):
         if type(t) is torch.Tensor:
             return torch.mean(torch.square(t))
+        elif type(t) is dict:
+            return torch.sum(torch.stack([loss(t[k]) for k in t]))
         else:
             return torch.sum(torch.stack([loss(tt) for tt in t]))
 
