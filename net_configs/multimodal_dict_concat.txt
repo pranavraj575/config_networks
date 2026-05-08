@@ -1,0 +1,39 @@
+{
+    'input_shape': {'vector':(10,),'image':(8, 240, 320)}, # input dict of tensors
+    'layers':
+        [
+            {
+                'type': 'parallel',
+                'branches': {
+                    'vector':None,
+                    'image':[
+                        {
+                            'type': 'maxpool',
+                            'kernel_size': (2, 2),
+                            'stride': (2, 2),
+                        },
+                        {
+                            'type': 'CNN',
+                            'out_channels': 16,
+                            'kernel_size': (5, 5),
+                            'stride': (3, 3),
+                            'padding': (0, 0),
+                        },
+                        {
+                            'type': 'ReLU',
+                        },
+                        {
+                            'type': 'maxpool',
+                            'kernel_size': (2, 2),
+                            'stride': (2, 2),
+                        },
+                        {
+                            'type': 'flatten',
+                        },
+                    ]
+                },
+                'combination': 'concat',
+                'key_order':['vector','image']
+            },
+        ],
+}
