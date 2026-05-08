@@ -242,6 +242,7 @@ Splitting and recombining ([`net_configs/small_split_recombine_cnn.json`](net_co
 <summary><code>parallel</code></summary>
 
 Computes a tuple of k tensors independently, may merge at end of computation.
+This can compute a dictionary (if `branches` is a dict type). In this case, look at <code>parallel</code> (dictionary input).
 
 * `branches`: optional parameter, list of k lists of layer dictionaries.
   Defaults to doing no computation.
@@ -294,6 +295,50 @@ Example of using this to sum all branches ([`net_configs/tuple_sum.txt`](net_con
 Example of using this to extract (then sum) multiple sub-tuples ([`net_configs/tuple_multiple_extraction.txt`](net_configs/tuple_multiple_extraction.txt)):
 
 ![](https://github.com/pranavraj575/config_networks/blob/main/images/visualize_tuple_multiple_extraction.png)
+</details>
+
+<details>
+<summary><code>parallel</code> (dictionary input)</summary>
+
+Computes a dictionary of k tensors independently, may merge at end of computation.
+
+* `branches`: required parameter, DICTIONARY of k lists of layer dictionaries.
+  Each list can also be `None` to do no computation
+* `combination`: optional parameter with default `"combination": "dict"`.
+  Determines how to combine the results of branches.
+  * For `"dict"`, the result will be a dictionary of the outputs of each branch, defaulting to the keys being unchanged.
+    However, if `"output_keys_to_combination"` is additionally included 
+    (e.g. `"output_keys_to_combination":{"input_keys":["vector", "vector2"],"combination":"tuple"}`), 
+    we can control the keys and combination method of the output dictionary.
+    `"output_keys_to_combination"` should be a dictionary with the following keys:
+    * `combination`: Required parameter, determines the combination method used (same as in `parallel`, the tuple version).
+    * `input_keys`: Required parameter, points to a list of keys in the order they will be combined.
+    * Any other arguments (e.g. `"extract_sub_tuples"` specified in this dictionary will behave exactly as in the `parallel` combination)
+  * For any other combination method is provided, this will again behave exactly the same as in the `parallel` combination.
+    In this case, `"key_order"` is a required parameter that decides the order of the keys when passed to the combination method.
+
+Examples are somewhat in depth, can be found in 
+[`net_configs/multimodal_dict.txt`](net_configs/multimodal_dict.txt) (which does not specify a combination method),
+[`net_configs/multimodal_dict_concat.txt`](net_configs/multimodal_dict_concat.txt) (which concatenates all branches),
+and [`net_configs/multimodal_dict_concat_some_keys.txt`](net_configs/multimodal_dict_concat_some_keys.txt) (which creates a new dict by concatenating various selections of keys).
+
+Visualization of [`net_configs/multimodal_dict.txt`](net_configs/multimodal_dict.txt) 
+(with input shape {'vector':(10,),'image':(8, 240, 320)} 
+and output shape {'image': (7904,), 'vector': (10,)}):
+
+![](https://github.com/pranavraj575/config_networks/blob/main/images/visualize_multimodal_dict.png)
+
+Visualization of [`net_configs/multimodal_dict_concat.txt`](net_configs/multimodal_dict_concat.txt)
+(with input shape {'vector':(10,),'image':(8, 240, 320)} 
+and output shape (7914,)):
+
+![](https://github.com/pranavraj575/config_networks/blob/main/images/visualize_multimodal_dict_concat.png)
+
+Visualization of [`net_configs/multimodal_dict_concat_some_keys.txt`](net_configs/multimodal_dict_concat_some_keys.txt)
+(with input shape {'vector':(10,),'vector2':(3,),'image':(8, 240, 320)}
+and output shape {'vectors': (13,), 'concatenated': (7917,), 'image': ((7904,),)}):
+
+![](https://github.com/pranavraj575/config_networks/blob/main/images/visualize_multimodal_dict_concat_some_keys.png)
 </details>
 
 <details>

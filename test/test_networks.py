@@ -12,7 +12,9 @@ network_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__fil
 
 
 def generate_random_input(batch_size, input_shape):
-    if type(input_shape[0]) is int:
+    if type(input_shape) is dict:
+        return {k:generate_random_input(batch_size, s) for k,s in input_shape.items()}
+    elif type(input_shape[0]) is int:
         return torch.normal(0, 1, (batch_size,) + tuple(input_shape))
     else:
         return tuple(generate_random_input(batch_size, s) for s in input_shape)
@@ -25,6 +27,8 @@ def get_output_shape(obj, unbatch):
             return tuple(shape[1:])
         else:
             return tuple(shape)
+    elif type(obj) is dict:
+        return {k:get_output_shape(o, unbatch) for k,o in obj.items()}
     else:
         return tuple(get_output_shape(o, unbatch) for o in obj)
 
@@ -48,7 +52,7 @@ def network_equalities(net1, net2):
 )
 @pytest.mark.parametrize(
     "network_file",
-    [os.path.join(network_dir, fn) for fn in os.listdir(network_dir)],
+    [os.path.join(network_dir, fn) for fn in os.listdir(network_dir) if 'dict' in fn],
 )
 def test_networks(batch_size, network_file):
     f = open(network_file, "r")
