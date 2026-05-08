@@ -265,7 +265,7 @@ class _CustomNNParallel(nn.Module):
 
         if "combined_idxs" in self.extra_kwargs:
             self.extra_kwargs["uncombined_idxs"] = [i for i in range(len(out_shapes)) if i not in self.extra_kwargs["combined_idxs"]]
-        if self.combine_tails == "tuple":
+        if self.combine_tails == "tuple" or self.combine_tails == "dict":
             if "extract_sub_tuples" in self.extra_kwargs:
                 self.extra_kwargs["extract_sub_tuples"] = set(self.extra_kwargs["extract_sub_tuples"])
                 self.output_shape = []
@@ -279,6 +279,10 @@ class _CustomNNParallel(nn.Module):
                 self.output_shape = tuple(self.output_shape)
             else:
                 self.output_shape = out_shapes
+            if self.combine_tails == "dict":
+                assert "output_keys" in self.extra_kwargs, "if converting tuple to dict, 'output_keys' must be specified"
+                assert len(self.extra_kwargs["output_keys"])==len(self.output_shape), f'number of output keys must be match number of elements in the tuple ({len(self.output_shape)}). recieved keys {self.extra_kwargs["output_keys"]}'
+                self.output_shape= {key_i:output_keys_i for key_i,output_keys_i in zip(self.extra_kwargs["output_keys"],self.output_shape)}
         elif self.combine_tails == "sum":
             combined_idxs = self.extra_kwargs.get("combined_idxs", list(range(len(out_shapes))))
             comb_shape = out_shapes[combined_idxs[0]]
@@ -320,7 +324,7 @@ class _CustomNNParallel(nn.Module):
 
     def forward(self, X):
         pre_com = tuple(tail(X_i) for tail, X_i in zip(self.tails, X))
-        if self.combine_tails == "tuple":
+        if self.combine_tails == "tuple" or self.combine_tails=='dict':
             if "extract_sub_tuples" in self.extra_kwargs:
                 out = []
                 for i, tail_output in enumerate(pre_com):
@@ -329,9 +333,13 @@ class _CustomNNParallel(nn.Module):
                         out.extend(tail_output)
                     else:
                         out.append(tail_output)
-                return tuple(out)
+                output= tuple(out)
             else:
-                return pre_com
+                output=pre_com
+            if self.combine_tails=='dict':
+                return {k:output_k for k,output_k in zip(self.extra_kwargs["output_keys"],output)}
+            else:
+                return output
         elif self.combine_tails == "sum":
             if "combined_idxs" in self.extra_kwargs:
                 combined = torch.sum(torch.stack([pre_com[comb_idx] for comb_idx in self.extra_kwargs["combined_idxs"]], dim=0), dim=0)

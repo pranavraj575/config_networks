@@ -257,6 +257,11 @@ This can compute a dictionary (if `branches` is a dict type). In this case, look
       `((5,),((2,),(3,)),(4,))` normally.
       If `"extract_sub_tuples":[1]`, the output shape will instead be `((5,),(2,),(3,),(4,))`.
       [`net_configs/tuple_extraction.txt`](net_configs/tuple_extraction.txt) has an example of using this as described.
+  * For `"dict"`, the result will be a dict of the outputs of each branch.
+    In this case, `"output_keys"` must be additionally specified, which is a list of keys that will refer to each element in the tuple. 
+    Optional `"extract_sub_tuples"` argument, that works the same as in `"tuple"`.
+
+    [`small_split_cnn_output_dict.txt`](net_configs/small_split_cnn_output_dict.txt) has an example of using this to create a dictionary `{'policy':policy, 'value':value}`..
     * For `"sum"`, the results of each branch will be summed.
       For this, each branch MUST have the same output dimension.
       If `"combined_idxs"` is additionally included (e.g. `"combined_idxs":[0,2]`), only the specified branches will be

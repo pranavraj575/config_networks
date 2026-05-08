@@ -1,0 +1,65 @@
+{
+  "input_shape": (8, 240,320),
+  "layers": [
+    {
+      "type": "maxpool",
+      "kernel_size": [
+        2,
+        2
+      ],
+      "stride": [
+        2,
+        2
+      ]
+    },
+    {
+      "type": "CNN",
+      "out_channels": 16,
+      "kernel_size": [
+        5,
+        5
+      ],
+      "stride": [
+        3,
+        3
+      ],
+      "padding": [
+        0,
+        0
+      ]
+    },
+    {
+      "type": "ReLU"
+    },
+    {
+      "type": "flatten"
+    },
+    {
+      "type": "split",
+      "branches": [
+        [
+          {
+            "type": "linear",
+            "out_features": 69,
+            "bias": False
+          },
+          {"type":"softmax", "dim":-1},
+        ],
+        [
+          {
+            "type": "linear",
+            "out_features": 1,
+            "bias": False
+          }
+        ]
+      ]
+    },
+    # add a parallel layer that does no computation, and makes the output a dict with (policy, value) keys
+    {
+      "type": "parallel",
+      "branches": None,
+      "combination":"dict",
+      "output_keys":["policy","value"]
+    }
+  ]
+}
