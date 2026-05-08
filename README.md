@@ -313,7 +313,7 @@ Note that `torchviz` does not display the dictionary output shape, which is `{'p
 
 Computes a dictionary of k tensors independently, may merge at end of computation.
 
-* `branches`: required parameter, DICTIONARY of k lists of layer dictionaries.
+* `branches`: required parameter, DICTIONARY of key -> lists of layer dictionaries.
   Each list can also be `None` to do no computation
 * `combination`: optional parameter with default `"combination": "dict"`.
   Determines how to combine the results of branches.
