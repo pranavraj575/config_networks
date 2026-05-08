@@ -32,6 +32,7 @@
                         },
                     ]
                 },
+                # here, we specifiy combination, which concatenates the result of the two branches in the specified order
                 'combination': 'concat',
                 'key_order':['vector','image']
             },
