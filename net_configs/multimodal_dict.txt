@@ -3,10 +3,10 @@
     'layers':
         [
             {
-                'type': 'parallel',
+                'type': 'parallel', # no combination is specified, so output will be a dictionary with keys 'vector' and 'image'
                 'branches': {
-                    'vector':None,
-                    'image':[
+                    'vector':None, # do no computation on the vector
+                    'image':[ # pass the image through a CNN architecture, then flatten
                         {
                             'type': 'maxpool',
                             'kernel_size': (2, 2),
