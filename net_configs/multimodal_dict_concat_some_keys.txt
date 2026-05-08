@@ -35,17 +35,18 @@
                 },
                 'combination': 'dict',
                 # specify what keys we want in the output, and how to combine each branch to get a key
+                # this results in an output with three keys ('vectors', 'concatenated', and 'image')
                 'output_keys_to_combination':{
                     'vectors':{
-                            'input_keys':['vector','vector2'],
+                            'input_keys':['vector','vector2'], # concatenate the results branches 'vector' and 'vector2'
                             'combination': 'concat',
                         },
                     'concatenated':{
-                            'input_keys':['vector','vector2','image'],
+                            'input_keys':['vector','vector2','image'], # concatenates the results of all branches in this order
                             'combination': 'concat',
                     },
                     'image':{
-                            'input_keys':['image'],
+                            'input_keys':['image'], # is the result of the 'image' branch
                             'combination': 'tuple',
                     },
                 }
