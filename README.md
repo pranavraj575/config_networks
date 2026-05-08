@@ -300,6 +300,12 @@ Example of using this to sum all branches ([`net_configs/tuple_sum.txt`](net_con
 Example of using this to extract (then sum) multiple sub-tuples ([`net_configs/tuple_multiple_extraction.txt`](net_configs/tuple_multiple_extraction.txt)):
 
 ![](https://github.com/pranavraj575/config_networks/blob/main/images/visualize_tuple_multiple_extraction.png)
+
+Example of using this to output dictionary[`small_split_cnn_output_dict.txt`](net_configs/small_split_cnn_output_dict.txt):
+
+Note that `torchviz` does not display the dictionary output shape, which is `{'policy': (69,), 'value': (1,)}`
+
+![](https://github.com/pranavraj575/config_networks/blob/main/images/visualize_small_split_cnn_output_dict.png)
 </details>
 
 <details>
