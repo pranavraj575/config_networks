@@ -1,6 +1,6 @@
 # Lightweight repository for building torch networks from a config file
 
-<img src="https://github.com/pranavraj575/config_networks/blob/main/images/visualize_small_split_recombine_cnn.gif" width="45%" />&nbsp;&nbsp;&nbsp;<img src="https://github.com/pranavraj575/config_networks/blob/main/images/visualize_resnet.gif" width="45%" />
+<img src="https://raw.githubusercontent.com/pranavraj575/config_networks/main/images/visualize_small_split_recombine_cnn.gif" width="45%" />&nbsp;&nbsp;&nbsp;<img src="https://raw.githubusercontent.com/pranavraj575/config_networks/main/images/visualize_resnet.gif" width="45%" />
 
 For examples of config dicts, look in `net_configs`.
 To generate a network given a dictionary, use `net = CustomNN(structure=config_dict)`.
