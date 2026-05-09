@@ -172,7 +172,7 @@ Alternatively works if `torch.nn` is unspecified: `{"type": "LogSoftmax", "dim":
 
 [`net_configs/resnet.txt`](net_configs/resnet.txt) has an example of using this to make a torch.nn.Softmax layer:
 
-![](https://github.com/pranavraj575/config_networks/blob/main/images/visualize_resnet.png)
+![](https://raw.githubusercontent.com/pranavraj575/config_networks/main/images/visualize_resnet.png)
 </details>
 
 <details>
@@ -190,7 +190,7 @@ Example: `{"type": "custom", "module": Scale, "scalar": -1, "output_shape": [10]
 
 Example of this is in [`example\use_custom_module.py`](example\use_custom_module.py):
 
-![](https://github.com/pranavraj575/config_networks/blob/main/images/visualize_custom.png)
+![](https://raw.githubusercontent.com/pranavraj575/config_networks/main/images/visualize_custom.png)
 </details>
 
 <details>
@@ -221,21 +221,21 @@ Example (this splits into an identity branch, and a branch that computes a singl
     "combination": "tuple"}
 `
 
-![](https://github.com/pranavraj575/config_networks/blob/main/images/visualize_split_example.png)
+![](https://raw.githubusercontent.com/pranavraj575/config_networks/main/images/visualize_split_example.png)
 
 Splitting once:
 
 Note that the `torchviz` display does not order the output tuple in any particular way. The true output shape is `((69,), (1,))`.
 
-![](https://github.com/pranavraj575/config_networks/blob/main/images/visualize_split_cnn.png)
+![](https://raw.githubusercontent.com/pranavraj575/config_networks/main/images/visualize_split_cnn.png)
 
 Splitting multiple times:
 
-![](https://github.com/pranavraj575/config_networks/blob/main/images/visualize_double_split_cnn.png)
+![](https://raw.githubusercontent.com/pranavraj575/config_networks/main/images/visualize_double_split_cnn.png)
 
 Splitting and recombining ([`net_configs/small_split_recombine_cnn.json`](net_configs/small_split_recombine_cnn.json)):
 
-![](https://github.com/pranavraj575/config_networks/blob/main/images/visualize_small_split_recombine_cnn.png)
+![](https://raw.githubusercontent.com/pranavraj575/config_networks/main/images/visualize_small_split_recombine_cnn.png)
 </details>
 
 <details>
@@ -280,32 +280,32 @@ Example (this flattens both inputs, then concatenates them):
     "combination": "concat",
     "branches": [[{"type": "flatten"}], [{"type": "flatten"}]]}`
 
-![](https://github.com/pranavraj575/config_networks/blob/main/images/visualize_parallel_example.png)
+![](https://raw.githubusercontent.com/pranavraj575/config_networks/main/images/visualize_parallel_example.png)
 
 [`net_configs/multimodal.txt`](net_configs/multimodal.txt) has an example of using these to take in (image, vector) input:
 
-![](https://github.com/pranavraj575/config_networks/blob/main/images/visualize_multimodal.png)
+![](https://raw.githubusercontent.com/pranavraj575/config_networks/main/images/visualize_multimodal.png)
 
 Example of using this to extract (then concatenate) sub-tuples ([`net_configs/tuple_extraction.txt`](net_configs/tuple_extraction.txt)):
 
 Note that the input shape is actually `(((10,), (11,), (12,), (13,)), (8, 240, 320))`, the package  `torchviz` does not correctly display subtuples.
 
-![](https://github.com/pranavraj575/config_networks/blob/main/images/visualize_tuple_extraction.png)
+![](https://raw.githubusercontent.com/pranavraj575/config_networks/main/images/visualize_tuple_extraction.png)
 
 Example of using this to sum all branches ([`net_configs/tuple_sum.txt`](net_configs/tuple_sum.txt)), and specific branches ([`net_configs/tuple_sum_specific_indices.txt`](net_configs/tuple_sum_specific_indices.txt)):
 
-![](https://github.com/pranavraj575/config_networks/blob/main/images/visualize_tuple_sum.png)
-![](https://github.com/pranavraj575/config_networks/blob/main/images/visualize_tuple_sum_specific_indices.png)
+![](https://raw.githubusercontent.com/pranavraj575/config_networks/main/images/visualize_tuple_sum.png)
+![](https://raw.githubusercontent.com/pranavraj575/config_networks/main/images/visualize_tuple_sum_specific_indices.png)
 
 Example of using this to extract (then sum) multiple sub-tuples ([`net_configs/tuple_multiple_extraction.txt`](net_configs/tuple_multiple_extraction.txt)):
 
-![](https://github.com/pranavraj575/config_networks/blob/main/images/visualize_tuple_multiple_extraction.png)
+![](https://raw.githubusercontent.com/pranavraj575/config_networks/main/images/visualize_tuple_multiple_extraction.png)
 
 Example of using this to output dictionary[`small_split_cnn_output_dict.txt`](net_configs/small_split_cnn_output_dict.txt):
 
 Note that `torchviz` does not display the dictionary output shape, which is `{'policy': (69,), 'value': (1,)}`
 
-![](https://github.com/pranavraj575/config_networks/blob/main/images/visualize_small_split_cnn_output_dict.png)
+![](https://raw.githubusercontent.com/pranavraj575/config_networks/main/images/visualize_small_split_cnn_output_dict.png)
 </details>
 
 <details>
@@ -337,19 +337,19 @@ Visualization of [`net_configs/multimodal_dict.txt`](net_configs/multimodal_dict
 (with input shape {'vector':(10,),'image':(8, 240, 320)} 
 and output shape {'image': (7904,), 'vector': (10,)}):
 
-![](https://github.com/pranavraj575/config_networks/blob/main/images/visualize_multimodal_dict.png)
+![](https://raw.githubusercontent.com/pranavraj575/config_networks/main/images/visualize_multimodal_dict.png)
 
 Visualization of [`net_configs/multimodal_dict_concat.txt`](net_configs/multimodal_dict_concat.txt)
 (with input shape {'vector':(10,),'image':(8, 240, 320)} 
 and output shape (7914,)):
 
-![](https://github.com/pranavraj575/config_networks/blob/main/images/visualize_multimodal_dict_concat.png)
+![](https://raw.githubusercontent.com/pranavraj575/config_networks/main/images/visualize_multimodal_dict_concat.png)
 
 Visualization of [`net_configs/multimodal_dict_concat_some_keys.txt`](net_configs/multimodal_dict_concat_some_keys.txt)
 (with input shape {'vector':(10,),'vector2':(3,),'image':(8, 240, 320)}
 and output shape {'vectors': (13,), 'concatenated': (7917,), 'image': ((7904,),)}):
 
-![](https://github.com/pranavraj575/config_networks/blob/main/images/visualize_multimodal_dict_concat_some_keys.png)
+![](https://raw.githubusercontent.com/pranavraj575/config_networks/main/images/visualize_multimodal_dict_concat_some_keys.png)
 </details>
 
 <details>
@@ -366,11 +366,11 @@ Example (this repeats a linear+activation layer a few times):
     "block": [{"type": "linear", "out_features": 32},
         {"type": "relu"}]}`
 
-![](https://github.com/pranavraj575/config_networks/blob/main/images/visualize_repeat_example.png)
+![](https://raw.githubusercontent.com/pranavraj575/config_networks/main/images/visualize_repeat_example.png)
 
 [`net_configs/resnet.txt`](net_configs/resnet.txt) has an example of using this to make a resnet, which repeatedly computes `x'=f(x)+x`:
 
-![](https://github.com/pranavraj575/config_networks/blob/main/images/visualize_resnet.png)
+![](https://raw.githubusercontent.com/pranavraj575/config_networks/main/images/visualize_resnet.png)
 
 </details>
 
