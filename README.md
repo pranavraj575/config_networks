@@ -15,26 +15,31 @@ The required keys are:
 ## setup
 
 Tested with Python &ge; 3.7
+* Can install directly as a package:
 
-Clone repository, install
+  ```shell
+  pip install config_networks
+  ```
 
-```shell
-git clone https://github.com/pranavraj575/config_networks
-cd config_networks
-pip install -e .
-```
-
-Optionally, install with dev tools:
-
-```shell
-pip install -e .[dev]
-```
-If installed with dev, can test installation, and reformat before pushing:
-
-```shell
-python -m pytest
-ruff check; ruff format; pyright
-```
+* OR can install by cloning the repository:
+    
+    ```shell
+    git clone https://github.com/pranavraj575/config_networks
+    cd config_networks
+    pip install -e .
+    ```
+    
+    Optionally, install with dev tools:
+    
+    ```shell
+    pip install -e .[dev]
+    ```
+    If installed with dev, can test installation, and reformat before pushing:
+    
+    ```shell
+    python -m pytest
+    ruff check; ruff format; pyright
+    ```
 
 ## layer dictionaries
 
