@@ -1,5 +1,9 @@
 # Lightweight repository for building torch networks from a config file
 
+[//]: <> (python example/viz.py # to make all images)
+[//]: <> (python example/viz.py --config_file net_configs/small_split_recombine_cnn.json --save_gif --duration 100 --scroll 5 # save gif 1)
+[//]: <> (python example/viz.py --config_file net_configs/resnet.json --save_gif --duration 200 --scroll 10 # save gif 2)
+
 <img src="https://raw.githubusercontent.com/pranavraj575/config_networks/main/images/visualize_small_split_recombine_cnn.gif" width="45%" />&nbsp;&nbsp;&nbsp;<img src="https://raw.githubusercontent.com/pranavraj575/config_networks/main/images/visualize_resnet.gif" width="45%" />
 
 For examples of config dicts, look in `net_configs`.
