@@ -8,6 +8,7 @@ also supports 'split' - allows for splitting into multiple heads (i.e. policy, v
 """
 
 import inspect
+import warnings
 
 import torch
 from torch import nn
@@ -113,6 +114,27 @@ def layer_from_config_dict(dic, input_shape, only_shape=False):
         shape = input_shape[:start_dim] + [middle_shape] + (input_shape[end_dim:])[1:]
         # remove the batched shape
         shape = shape[1:]
+    elif typ == "unflatten":
+        assert "dim" in dic, "REQUIRED argument dim (dimension to unflatten)"
+        assert "unflattened_size" in dic, "REQUIRED argument unflattened_size (size to unflatten to)"
+        dim = dic["dim"]
+        unflattened_size = dic["unflattened_size"]
+        if dim >= 0:
+            warnings.warn(
+                f"warning: 'dim' parameter {dim}>=0. This layer will behave differently for batched and unbatched input. Use negative indexing to avoid this"
+            )
+        if not only_shape:
+            layer = nn.Unflatten(**get_kwargs(nn.Unflatten, dic))
+        # INCLUSIVE of end dim
+        # convert to batched first to make this less annoying (+1s everywhere)
+        input_shape = (-1,) + tuple(input_shape)
+        assert type(input_shape[dim]) is int, f"dimension {dim} of input {input_shape} is not an int"
+        prod = int(torch.prod(torch.tensor(unflattened_size)))
+        assert (prod == input_shape[dim]) or (prod < 0 and input_shape[dim] == prod * round(input_shape[dim] / prod)), (
+            f"specified dimension of size {input_shape[dim]} cannot expand to unflattened_size {unflattened_size}"
+        )
+        input_shape = input_shape[:dim] + tuple(unflattened_size) + input_shape[dim:][1:]
+        shape = input_shape[1:]
     elif typ == "embedding":
         assert "num_embeddings" in dic and "embedding_dim" in dic, "REQUIRED arguments num_embeddings and embedding_dim"
         if not only_shape:
@@ -221,8 +243,8 @@ class _CustomNNSplit(nn.Module):
         self.heads = nn.ModuleList(heads)
         self.output_shape = tuple(output_shapes)
 
-    def forward(self, X):
-        return tuple(head(X) for head in self.heads)
+    def forward(self, *args, **kwargs):
+        return tuple(head(*args, **kwargs) for head in self.heads)
 
 
 class _CustomNNParallel(nn.Module):
@@ -551,5 +573,5 @@ class CustomNN(nn.Module):
             self.network = nn.Sequential(*layers)
         self.output_shape = shape
 
-    def forward(self, X):
-        return self.network(X)
+    def forward(self, *args, **kwargs):
+        return self.network(*args, **kwargs)

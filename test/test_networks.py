@@ -15,7 +15,8 @@ def generate_random_input(batch_size, input_shape):
     if type(input_shape) is dict:
         return {k: generate_random_input(batch_size, s) for k, s in input_shape.items()}
     elif type(input_shape[0]) is int:
-        return torch.normal(0, 1, (batch_size,) + tuple(input_shape))
+        shape = tuple([s if s >= 0 else int(torch.randint(20, 30, (1,))) for s in (batch_size,) + tuple(input_shape)])
+        return torch.normal(0, 1, shape)
     else:
         return tuple(generate_random_input(batch_size, s) for s in input_shape)
 
@@ -89,6 +90,8 @@ def test_save_and_load(batch_size, network_file):
     input_shape = config_dict["input_shape"]
     input = generate_random_input(batch_size, input_shape)
     network2.load_state_dict(network.state_dict())
+    network.eval()
+    network2.eval()
     output = network(input)
     output2 = network2(input)
     assert equality(output, output2)
@@ -115,7 +118,10 @@ def test_train(batch_size, network_file):
     network2.load_state_dict(network.state_dict())
     input_shape = config_dict["input_shape"]
     # train and assert that gradients flow through all parameters
-    optim = torch.optim.Adam(network2.parameters())
+    params = list(network2.parameters())
+    if not params:
+        return
+    optim = torch.optim.Adam(params)
 
     def loss(t):
         if type(t) is torch.Tensor:

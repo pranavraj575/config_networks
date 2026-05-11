@@ -1,0 +1,14 @@
+{
+  "input_shape": [-1,128],
+  "layers": [
+    {
+      "type": "TransformerEncoderLayer",
+      "d_model": 128,
+      "nhead": 4,
+      "dim_feedforward": 256,
+      "dropout": 0.1,
+      "batch_first": true,
+      "output_shape": [-1,128]
+    }
+  ]
+}

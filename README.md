@@ -1,6 +1,7 @@
 # Lightweight repository for building torch networks from a config file
 
 [//]: <> (python example/viz.py # to make all images)
+[//]: <> (python example/viz.py --config_file net_configs/encoder_layer.json --recursion 1 # for transformer encoder)
 [//]: <> (python example/viz.py --config_file net_configs/small_split_recombine_cnn.json --save_gif --duration 100 --scroll 5 # save gif 1)
 [//]: <> (python example/viz.py --config_file net_configs/resnet.json --save_gif --duration 200 --scroll 10 # save gif 2)
 
@@ -13,7 +14,7 @@ For example, `net = CustomNN(structure=ast.literal_eval(open(<config file>).read
 A valid configuration is a dictionary.
 The required keys are:
 
-* `input_shape`: the UNBATCHED input shape of the network
+* `input_shape`: the UNBATCHED input shape of the network. -1 represents a variable dimension size (for seq-to-seq layers like transformers).
 * `layers`: list of network layers, each layer is a dictionary with layer specific keys
 
 ## setup
@@ -118,7 +119,25 @@ Example: `{"type": "Dropout", "p": 0.69}`
 * `start_dim`: optional parameter with default `"start_dim": 1`, represnents first dimension for flattening
 * `end_dim`: optional parameter with default `"end_dim": -1`, represents last dimension to be flattened
 
+Example: `{"type": "Flatten", "start_dim": -3, "end_dim": -1}`
+
+Note: This layer behaves differently with batched and unbatched input
+</details>
+
+<details>
+<summary><code>unflatten</code></summary>
+
+[Unflatten](https://docs.pytorch.org/docs/2.11/generated/torch.nn.modules.flatten.Unflatten.html) torch layer
+
+* `dim`: required parameter, represnents which dimension to expand
+* `unflattened_size`: required parameter, represents what shape to expand to
+
 Example: `{"type": "Flatten", "start_dim": 1, "end_dim": -1}`
+
+[`net_configs/flatten_unflatten.json`](net_configs/flatten_unflatten.json) has an example of flattening, then unflattening:
+
+![](https://raw.githubusercontent.com/pranavraj575/config_networks/main/images/visualize_flatten_unflatten.png)
+
 </details>
 
 <details>
@@ -200,6 +219,10 @@ Example: `{"type": "custom", "module": Scale, "scalar": -1, "output_shape": [10]
 Example of this is in [`example\use_custom_module.py`](example\use_custom_module.py):
 
 ![](https://raw.githubusercontent.com/pranavraj575/config_networks/main/images/visualize_custom.png)
+
+Another example (which uses a variable input shape of (-1,128)) is in  [`net_configs/encoder_layer.json`](net_configs/encoder_layer.json):
+
+![](https://raw.githubusercontent.com/pranavraj575/config_networks/main/images/visualize_encoder_layer.png)
 </details>
 
 <details>
