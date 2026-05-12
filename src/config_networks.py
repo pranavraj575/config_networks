@@ -539,6 +539,7 @@ class CustomNN(nn.Module):
             elif dic["type"] == "parallel":
                 branches = dic.get("branches", None)
                 if type(branches) is dict:
+                    assert type(shape) is dict, f"type of input shape is {type(shape)}, must match branches type ({type(branches)}"
                     par_lyr = _CustomNNParallelDict(
                         input_shape=shape,
                         layer_dict_lists=branches,
@@ -546,6 +547,7 @@ class CustomNN(nn.Module):
                         **dic,  # give it any extra kwargs that are in dic
                     )
                 else:
+                    assert type(shape) is not dict, f"type of input shape is {type(shape)}, must match branches type ({type(branches)}"
                     par_lyr = _CustomNNParallel(
                         input_shape=shape,
                         layer_dict_lists=branches,
